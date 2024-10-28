@@ -35,9 +35,11 @@ func (a *App) init(ctx context.Context) error {
 }
 
 func (a *App) initConfig(ctx context.Context) error {
-	a.config = &config.Config{
-		Port: ":8080",
+	config, err := config.NewConfig()
+	if err != nil {
+		panic(err)
 	}
+	a.config = config
 	return nil
 }
 

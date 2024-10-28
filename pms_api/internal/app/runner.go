@@ -16,12 +16,12 @@ const (
 )
 
 func (a *App) runHttpServer() error {
-	slog.Info("starting http server", "address", a.config.GetAddress())
+	slog.Info("starting http server", "address", a.config.Http.Port)
 	a.router.Server.ReadTimeout = readTimeout
 	a.router.Server.WriteTimeout = writeTimeout
 	a.router.Server.MaxHeaderBytes = maxHeaderBytes
 
-	return a.router.Start(a.config.GetAddress())
+	return a.router.Start(a.config.Http.Port)
 }
 
 func (a *App) stopHttpServer(ctx context.Context) error {
