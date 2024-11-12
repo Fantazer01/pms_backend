@@ -1,0 +1,9 @@
+version: "2"
+services:
+  pms_api:
+    container_name: pms_api
+    build:
+      context: .
+      dockerfile: docker/pms_api/pmsapi.dockerfile
+    ports:
+      - "8080:8080"
