@@ -1,0 +1,38 @@
+services:
+  pms_api:
+    container_name: pms_api
+    build:
+      context: .
+      dockerfile: docker/pms_api/pmsapi.dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      pms_postgresql:
+        condition: service_healthy
+    networks: [ "pms_services" ]
+
+  pms_postgresql:
+    image: postgres
+    container_name: pms_postgresql
+    expose:
+      - 5432
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=PMSMEPHI
+      - POSTGRES_DB=pms-develop
+      - POSTGRES_HOST=5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d pms-develop" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: -p 5432
+    volumes:
+      - ./pms_pgdata:/var/lib/postgresql/data
+    networks: [ "pms_services" ]
+
+networks:
+  pms_services:
+    name: pms_services
+    driver: bridge
