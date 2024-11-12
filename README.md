@@ -20,7 +20,7 @@ Role in project:
 ```bash
 git clone https://github.com/Fantazer01/pms-backend.git
 cd pms-backend
-docker compose -f docker-compose.yml build
+docker compose -f docker-compose.yaml build
 ```
 
 ### For developing/testing
@@ -28,12 +28,12 @@ docker compose -f docker-compose.yml build
 ```bash
 git clone https://github.com/Fantazer01/pms-backend.git
 cd pms-backend
-docker compose -f docker-compose.dev.yml build
+docker compose -f docker-compose.dev.yaml build
 ```
 
 ## Launch
 
-Replace **NAME_DOCKER_COMPOSE_FILE** on docker-compose.yml or docker-compose.dev.yml
+Replace **NAME_DOCKER_COMPOSE_FILE** on docker-compose.yaml or docker-compose.dev.yaml
 
 ```bash
 docker compose -f {NAME_DOCKER_COMPOSE_FILE} up -d

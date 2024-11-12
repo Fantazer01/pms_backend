@@ -3,8 +3,8 @@ FROM golang:1.22-alpine AS build-stage
 
 WORKDIR /app
 
-COPY ./pms_api /app/pms_api
-COPY ./go.* /app
+COPY ./pms_api /app/pms_api/
+COPY ./go.* /app/
 
 #RUN go mod download
 
