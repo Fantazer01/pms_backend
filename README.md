@@ -15,14 +15,27 @@ Role in project:
 
 ## Build
 
+### For product
+
 ```bash
 git clone https://github.com/Fantazer01/pms-backend.git
 cd pms-backend
-docker build -f ./docker/pms_api/pmsapi.dockerfile -t pms_api .
+docker compose -f docker-compose.yml build
 ```
-## Launch
+
+### For developing/testing
 
 ```bash
-docker run -d -p 8080:8080 pms_api
+git clone https://github.com/Fantazer01/pms-backend.git
+cd pms-backend
+docker compose -f docker-compose.dev.yml build
+```
+
+## Launch
+
+Replace **NAME_DOCKER_COMPOSE_FILE** on docker-compose.yml or docker-compose.dev.yml
+
+```bash
+docker compose -f {NAME_DOCKER_COMPOSE_FILE} up -d
 ```
 
