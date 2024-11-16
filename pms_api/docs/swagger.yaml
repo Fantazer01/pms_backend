@@ -243,6 +243,25 @@ paths:
       summary: Get project tasks
       tags:
       - Project
+  /projects/{project_id}/archive:
+    put:
+      description: Archive the project by id
+      parameters:
+      - description: Project id
+        in: path
+        name: project_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProjectsPaged'
+      summary: Archive the project by id
+      tags:
+      - Project
   /projects/{project_id}/members/{user_id}:
     post:
       consumes:
@@ -256,6 +275,38 @@ paths:
         "400":
           description: Bad Request
       summary: Add project member
+      tags:
+      - Project
+  /projects/{project_id}/unarchive:
+    put:
+      description: Unarchive the project by id
+      parameters:
+      - description: Project id
+        in: path
+        name: project_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProjectsPaged'
+      summary: Unarchive the project by id
+      tags:
+      - Project
+  /projects/archived:
+    get:
+      description: Get archived projects
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProjectsPaged'
+      summary: Get archived projects
       tags:
       - Project
   /refresh:

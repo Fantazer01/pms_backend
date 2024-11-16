@@ -103,6 +103,26 @@ const docTemplate = `{
                 }
             }
         },
+        "/projects/archived": {
+            "get": {
+                "description": "Get archived projects",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get archived projects",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ProjectsPaged"
+                        }
+                    }
+                }
+            }
+        },
         "/projects/{id}": {
             "get": {
                 "description": "Get project by ID",
@@ -237,6 +257,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/projects/{project_id}/archive": {
+            "put": {
+                "description": "Archive the project by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Archive the project by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project id",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ProjectsPaged"
+                        }
+                    }
+                }
+            }
+        },
         "/projects/{project_id}/members/{user_id}": {
             "post": {
                 "description": "Add project member",
@@ -256,6 +305,35 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/projects/{project_id}/unarchive": {
+            "put": {
+                "description": "Unarchive the project by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Unarchive the project by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project id",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ProjectsPaged"
+                        }
                     }
                 }
             }
