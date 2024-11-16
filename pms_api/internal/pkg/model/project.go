@@ -8,6 +8,11 @@ type Project struct {
 	UpdatedAt   string `json:"updated_at"`
 }
 
+type InsertProject struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
 type ProjectsPaged struct {
 	PageIndex int        `json:"page_index"`
 	PageSize  int        `json:"page_size"`
