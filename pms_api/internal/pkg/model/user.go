@@ -11,6 +11,10 @@ type User struct {
 	UpdatedAt  string `json:"updated_at"`
 }
 
+type Users struct {
+	Users []*User `json:"items"`
+}
+
 type UsersPaged struct {
 	PageIndex int     `json:"page_index"`
 	PageSize  int     `json:"page_size"`
