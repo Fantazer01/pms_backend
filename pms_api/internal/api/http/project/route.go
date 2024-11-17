@@ -6,10 +6,10 @@ func (h *handler) RegirterRoutes(router *echo.Group) {
 	projects := router.Group("/projects")
 	{
 		projects.GET("", h.GetProjects)
-		projects.GET("/:id", h.GetProjectByID)
+		projects.GET("/:project_id", h.GetProjectByID)
 		projects.POST("", h.CreateProject)
-		projects.PUT("/:id", h.UpdateProject)
-		projects.DELETE("/:id", h.DeleteProject)
+		projects.PUT("/:project_id", h.UpdateProject)
+		projects.DELETE("/:project_id", h.DeleteProject)
 
 		projects.GET("/archived", h.GetArchivedProjects)
 		projects.PUT("/:project_id/archive", h.ArchiveProject)
