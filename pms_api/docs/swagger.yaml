@@ -1,5 +1,17 @@
 basePath: /api/v1
 definitions:
+  model.InsertProject:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    type: object
+  model.Message:
+    properties:
+      message:
+        type: string
+    type: object
   model.Project:
     properties:
       created_at:
@@ -131,6 +143,15 @@ paths:
       consumes:
       - application/json
       description: Get projects
+      parameters:
+      - description: Page index of projects
+        in: query
+        name: pageIndex
+        type: string
+      - description: Page size of projects
+        in: query
+        name: pageSize
+        type: string
       produces:
       - application/json
       responses:
@@ -138,6 +159,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.ProjectsPaged'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Get projects
       tags:
       - Project
@@ -145,6 +170,13 @@ paths:
       consumes:
       - application/json
       description: Create project
+      parameters:
+      - description: Project
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/model.InsertProject'
       produces:
       - application/json
       responses:
@@ -152,21 +184,45 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/model.Project'
+        "422":
+          description: Bind error
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Create project
       tags:
       - Project
-  /projects/{id}:
+  /projects/{project_id}:
     delete:
       consumes:
       - application/json
       description: Delete project
+      parameters:
+      - description: Project id
+        in: path
+        name: project_id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "204":
           description: No Content
-        "400":
-          description: Bad Request
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id of project
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Delete project
       tags:
       - Project
@@ -174,6 +230,12 @@ paths:
       consumes:
       - application/json
       description: Get project by ID
+      parameters:
+      - description: Project id
+        in: path
+        name: project_id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -181,6 +243,18 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.Project'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id of project
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Get project by ID
       tags:
       - Project
@@ -188,6 +262,18 @@ paths:
       consumes:
       - application/json
       description: Update project
+      parameters:
+      - description: Project id
+        in: path
+        name: project_id
+        required: true
+        type: string
+      - description: Project
+        in: body
+        name: project
+        required: true
+        schema:
+          $ref: '#/definitions/model.InsertProject'
       produces:
       - application/json
       responses:
@@ -195,52 +281,19 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.Project'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id of project/Bind error
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Update project
-      tags:
-      - Project
-  /projects/{id}/members:
-    get:
-      consumes:
-      - application/json
-      description: Get project members
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.UsersPaged'
-      summary: Get project members
-      tags:
-      - Project
-  /projects/{id}/members/{user_id}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete project member
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-        "400":
-          description: Bad Request
-      summary: Delete project member
-      tags:
-      - Project
-  /projects/{id}/tasks:
-    get:
-      consumes:
-      - application/json
-      description: Get project tasks
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.Tasks'
-      summary: Get project tasks
       tags:
       - Project
   /projects/{project_id}/archive:
@@ -259,22 +312,154 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.ProjectsPaged'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id of project
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Archive the project by id
       tags:
       - Project
-  /projects/{project_id}/members/{user_id}:
-    post:
+  /projects/{project_id}/members:
+    get:
       consumes:
       - application/json
-      description: Add project member
+      description: Get project members
+      parameters:
+      - description: Project id
+        in: path
+        name: project_id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
-        "400":
-          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.UsersPaged'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id of project
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
+      summary: Get project members
+      tags:
+      - Project
+  /projects/{project_id}/members/{user_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete project member
+      parameters:
+      - description: Project id
+        in: path
+        name: project_id
+        required: true
+        type: string
+      - description: User id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Project not found/User not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id of project/Incorrect id of user
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
+      summary: Delete project member
+      tags:
+      - Project
+    post:
+      consumes:
+      - application/json
+      description: Add project member
+      parameters:
+      - description: Project id
+        in: path
+        name: project_id
+        required: true
+        type: string
+      - description: User id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Project not found/User not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id of project/Incorrect id of user
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Add project member
+      tags:
+      - Project
+  /projects/{project_id}/tasks:
+    get:
+      description: Get project tasks
+      parameters:
+      - description: Project id
+        in: path
+        name: project_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Tasks'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id of project
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
+      summary: Get project tasks
       tags:
       - Project
   /projects/{project_id}/unarchive:
@@ -293,12 +478,33 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.ProjectsPaged'
+        "404":
+          description: Project not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id of project
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Unarchive the project by id
       tags:
       - Project
   /projects/archived:
     get:
       description: Get archived projects
+      parameters:
+      - description: Page index of projects
+        in: query
+        name: pageIndex
+        type: string
+      - description: Page size of projects
+        in: query
+        name: pageSize
+        type: string
       produces:
       - application/json
       responses:
@@ -306,6 +512,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.ProjectsPaged'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Get archived projects
       tags:
       - Project

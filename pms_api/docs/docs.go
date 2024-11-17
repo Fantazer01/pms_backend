@@ -72,11 +72,31 @@ const docTemplate = `{
                     "Project"
                 ],
                 "summary": "Get projects",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Page index of projects",
+                        "name": "pageIndex",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Page size of projects",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.ProjectsPaged"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
                         }
                     }
                 }
@@ -93,11 +113,34 @@ const docTemplate = `{
                     "Project"
                 ],
                 "summary": "Create project",
+                "parameters": [
+                    {
+                        "description": "Project",
+                        "name": "project",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.InsertProject"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.Project"
+                        }
+                    },
+                    "422": {
+                        "description": "Bind error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
                         }
                     }
                 }
@@ -113,17 +156,37 @@ const docTemplate = `{
                     "Project"
                 ],
                 "summary": "Get archived projects",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Page index of projects",
+                        "name": "pageIndex",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Page size of projects",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.ProjectsPaged"
                         }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
                     }
                 }
             }
         },
-        "/projects/{id}": {
+        "/projects/{project_id}": {
             "get": {
                 "description": "Get project by ID",
                 "consumes": [
@@ -136,11 +199,38 @@ const docTemplate = `{
                     "Project"
                 ],
                 "summary": "Get project by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project id",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.Project"
+                        }
+                    },
+                    "404": {
+                        "description": "Project not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect id of project",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
                         }
                     }
                 }
@@ -157,11 +247,47 @@ const docTemplate = `{
                     "Project"
                 ],
                 "summary": "Update project",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project id",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Project",
+                        "name": "project",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.InsertProject"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.Project"
+                        }
+                    },
+                    "404": {
+                        "description": "Project not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect id of project/Bind error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
                         }
                     }
                 }
@@ -178,80 +304,35 @@ const docTemplate = `{
                     "Project"
                 ],
                 "summary": "Delete project",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project id",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "No Content"
                     },
-                    "400": {
-                        "description": "Bad Request"
-                    }
-                }
-            }
-        },
-        "/projects/{id}/members": {
-            "get": {
-                "description": "Get project members",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Project"
-                ],
-                "summary": "Get project members",
-                "responses": {
-                    "200": {
-                        "description": "OK",
+                    "404": {
+                        "description": "Project not found",
                         "schema": {
-                            "$ref": "#/definitions/model.UsersPaged"
+                            "$ref": "#/definitions/model.Message"
                         }
-                    }
-                }
-            }
-        },
-        "/projects/{id}/members/{user_id}": {
-            "delete": {
-                "description": "Delete project member",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Project"
-                ],
-                "summary": "Delete project member",
-                "responses": {
-                    "204": {
-                        "description": "No Content"
                     },
-                    "400": {
-                        "description": "Bad Request"
-                    }
-                }
-            }
-        },
-        "/projects/{id}/tasks": {
-            "get": {
-                "description": "Get project tasks",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Project"
-                ],
-                "summary": "Get project tasks",
-                "responses": {
-                    "200": {
-                        "description": "OK",
+                    "422": {
+                        "description": "Incorrect id of project",
                         "schema": {
-                            "$ref": "#/definitions/model.Tasks"
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
                         }
                     }
                 }
@@ -282,6 +363,74 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/model.ProjectsPaged"
                         }
+                    },
+                    "404": {
+                        "description": "Project not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect id of project",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    }
+                }
+            }
+        },
+        "/projects/{project_id}/members": {
+            "get": {
+                "description": "Get project members",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get project members",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project id",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.UsersPaged"
+                        }
+                    },
+                    "404": {
+                        "description": "Project not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect id of project",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
                     }
                 }
             }
@@ -299,12 +448,142 @@ const docTemplate = `{
                     "Project"
                 ],
                 "summary": "Add project member",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project id",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Project not found/User not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect id of project/Incorrect id of user",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete project member",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Delete project member",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project id",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User id",
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Project not found/User not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect id of project/Incorrect id of user",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    }
+                }
+            }
+        },
+        "/projects/{project_id}/tasks": {
+            "get": {
+                "description": "Get project tasks",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get project tasks",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Project id",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Tasks"
+                        }
                     },
-                    "400": {
-                        "description": "Bad Request"
+                    "404": {
+                        "description": "Project not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect id of project",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
                     }
                 }
             }
@@ -333,6 +612,24 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.ProjectsPaged"
+                        }
+                    },
+                    "404": {
+                        "description": "Project not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect id of project",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
                         }
                     }
                 }
@@ -574,6 +871,25 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "model.InsertProject": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Message": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Project": {
             "type": "object",
             "properties": {
