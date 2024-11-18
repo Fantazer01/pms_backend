@@ -3,9 +3,11 @@ package app
 import (
 	"context"
 	"log/slog"
-	"net/http"
 	"os"
+	project_http "pms_backend/pms_api/internal/api/http/project"
 	"pms_backend/pms_api/internal/config"
+	project_repository "pms_backend/pms_api/internal/repository/project/mock"
+	project_service "pms_backend/pms_api/internal/service/project"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -18,7 +20,7 @@ func (a *App) init(ctx context.Context) error {
 		a.initConfig,
 		a.initLog,
 		a.initDb,
-		a.initUseCase,
+		a.initService,
 		a.initRouter,
 		a.initSwagger,
 		a.initMiddleware,
@@ -56,7 +58,8 @@ func (a *App) initDb(ctx context.Context) error {
 	return nil
 }
 
-func (a *App) initUseCase(ctx context.Context) error {
+func (a *App) initService(ctx context.Context) error {
+	a.projectService = project_service.NewProjectService(project_repository.NewMockProjectRepository())
 	return nil
 }
 
@@ -84,8 +87,7 @@ func (a *App) initMiddleware(ctx context.Context) error {
 }
 
 func (a *App) registerRoutes(ctx context.Context) error {
-	a.router.GET("/ping", func(c echo.Context) error {
-		return c.String(http.StatusOK, "pong")
-	})
+	api := a.router.Group(a.config.Http.BasePath)
+	project_http.RegisterRoutes(api, a.projectService)
 	return nil
 }
