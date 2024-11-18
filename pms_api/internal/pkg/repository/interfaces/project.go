@@ -5,11 +5,11 @@ import (
 	"pms_backend/pms_api/internal/pkg/model"
 )
 
-type ProjectService interface {
+type ProjectRepository interface {
 	GetProjectsPaged(ctx context.Context, pageInfo *model.PageInfo) ([]*model.Project, error)
 	GetProjectByID(ctx context.Context, projectID string) (*model.Project, error)
-	CreateProject(ctx context.Context, project *model.InsertProject) error
-	UpdateProject(ctx context.Context, projectID string, project *model.InsertProject) error
+	CreateProject(ctx context.Context, project *model.Project) error
+	UpdateProject(ctx context.Context, project *model.Project) error
 	DeleteProject(ctx context.Context, projectID string) error
 
 	GetArchivedProjectsPaged(ctx context.Context, pageInfo *model.PageInfo) ([]*model.Project, error)
