@@ -1,8 +1,13 @@
 package project
 
-import "github.com/labstack/echo/v4"
+import (
+	"pms_backend/pms_api/internal/pkg/service/interfaces"
 
-func (h *handler) RegirterRoutes(router *echo.Group) {
+	"github.com/labstack/echo/v4"
+)
+
+func RegisterRoutes(router *echo.Group, s interfaces.ProjectService) {
+	h := NewHandler(s)
 	projects := router.Group("/projects")
 	{
 		projects.GET("", h.GetProjects)
