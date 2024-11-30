@@ -14,34 +14,6 @@ CREATE SEQUENCE IF NOT EXISTS public.role__role_id_seq
 ALTER SEQUENCE public.role__role_id_seq
     OWNER TO admin;
 
--- SEQUENCE: public.project__project_id_seq
-
--- DROP SEQUENCE IF EXISTS public.project__project_id_seq;
-
-CREATE SEQUENCE IF NOT EXISTS public.project__project_id_seq
-    INCREMENT 1
-    START 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
-
-ALTER SEQUENCE public.project__project_id_seq
-    OWNER TO admin;
-
--- SEQUENCE: public.participants_project__project_id_seq
-
--- DROP SEQUENCE IF EXISTS public.participants_project__project_id_seq;
-
-CREATE SEQUENCE IF NOT EXISTS public.participants_project__participants_project_id_seq
-    INCREMENT 1
-    START 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
-
-ALTER SEQUENCE public.participants_project__participants_project_id_seq
-    OWNER TO admin;
-
 -- SEQUENCE: public.task__task_id_seq
 
 -- DROP SEQUENCE IF EXISTS public.task__task_id_seq;
@@ -62,9 +34,9 @@ ALTER SEQUENCE public.task__task_id_seq
 
 CREATE TABLE IF NOT EXISTS public.role
 (
-    role_id integer NOT NULL DEFAULT nextval('role__role_id_seq'::regclass),
+    id integer NOT NULL DEFAULT nextval('role__role_id_seq'::regclass),
     name_role text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT role_pkey PRIMARY KEY (role_id)
+    CONSTRAINT role_pkey PRIMARY KEY (id)
 )
 
 TABLESPACE pg_default;
@@ -82,25 +54,24 @@ INSERT INTO public.role (name_role)
 
 -- DROP TABLE IF EXISTS public.user_app;
 
-CREATE TABLE IF NOT EXISTS public.user_app
+CREATE TABLE IF NOT EXISTS public.users
 (
-    user_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    id uuid PRIMARY KEY,
     first_name text COLLATE pg_catalog."default" NOT NULL,
     last_name text COLLATE pg_catalog."default" NOT NULL,
     "position" text COLLATE pg_catalog."default" NOT NULL,
     is_admin boolean NOT NULL,
     login text COLLATE pg_catalog."default" NOT NULL,
-    password text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT user_pkey PRIMARY KEY (user_id)
+    password text COLLATE pg_catalog."default" NOT NULL
 )
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public.user_app
+ALTER TABLE IF EXISTS public.users
     OWNER to admin;
 
-INSERT INTO public.user_app (first_name, last_name, position, is_admin, login, password)
-    VALUES ('Главный администратор', '', 'Администратор системы', true, 'admin', 'admin');
+INSERT INTO public.users (id, first_name, last_name, position, is_admin, login, password)
+    VALUES ('445e2563-67d1-474e-9b8b-ba325dc17ac8', 'Главный администратор', '', 'Администратор системы', true, 'admin', 'admin');
 
 -- Table: public.project
 
@@ -108,11 +79,11 @@ INSERT INTO public.user_app (first_name, last_name, position, is_admin, login, p
 
 CREATE TABLE IF NOT EXISTS public.project
 (
-    project_id bigint NOT NULL DEFAULT nextval('project__project_id_seq'::regclass),
-    name_project text COLLATE pg_catalog."default" NOT NULL,
-    data_creation date NOT NULL,
+    id uuid PRIMARY KEY,
+    name text COLLATE pg_catalog."default" NOT NULL,
     description text COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT project_pkey PRIMARY KEY (project_id)
+    created_at timestamptz NOT NULL,
+    updated_at timestamptz NOT NULL
 )
 
 TABLESPACE pg_default;
@@ -126,22 +97,14 @@ ALTER TABLE IF EXISTS public.project
 
 CREATE TABLE IF NOT EXISTS public.participants_project
 (
-    participants_project_id bigint NOT NULL DEFAULT nextval('participants_project__participants_project_id_seq'::regclass),
+    id uuid PRIMARY KEY,
     user_id uuid NOT NULL,
-    project_id bigint NOT NULL,
+    project_id uuid NOT NULL,
     role_id integer NOT NULL,
     is_admin_project boolean NOT NULL,
-    CONSTRAINT participants_project_pkey PRIMARY KEY (participants_project_id),
-    CONSTRAINT fkey_role FOREIGN KEY (role_id)
-        REFERENCES public.role (role_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT fkey_user FOREIGN KEY (user_id)
-        REFERENCES public.user_app (user_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID
+    CONSTRAINT fkey_participants_project_role FOREIGN KEY (role_id) REFERENCES role(id),
+    CONSTRAINT fkey_participants_project_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fkey_participants_project_project FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE
 )
 
 TABLESPACE pg_default;
@@ -155,37 +118,21 @@ ALTER TABLE IF EXISTS public.participants_project
 
 CREATE TABLE IF NOT EXISTS public.task
 (
-    task_id bigint NOT NULL DEFAULT nextval('task__task_id_seq'::regclass),
+    id bigint NOT NULL DEFAULT nextval('task__task_id_seq'::regclass),
     name text COLLATE pg_catalog."default" NOT NULL,
-    project_id bigint NOT NULL,
-    status text COLLATE pg_catalog."default" NOT NULL,
-    data_creation timestamp without time zone NOT NULL,
-    date_deadline time without time zone NOT NULL,
     description text COLLATE pg_catalog."default" NOT NULL,
-    user_author_id uuid NOT NULL,
-    user_executor_id uuid NOT NULL,
-    user_tester_id uuid NOT NULL,
-    CONSTRAINT task_pkey PRIMARY KEY (task_id),
-    CONSTRAINT fkey_project FOREIGN KEY (project_id)
-        REFERENCES public.role (role_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT fkey_user_author FOREIGN KEY (user_author_id)
-        REFERENCES public.user_app (user_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT fkey_user_executor FOREIGN KEY (user_executor_id)
-        REFERENCES public.user_app (user_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT fkey_user_tester FOREIGN KEY (user_tester_id)
-        REFERENCES public.user_app (user_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID
+    status text COLLATE pg_catalog."default" NOT NULL,
+    project_id uuid NOT NULL,
+    created_at timestamptz NOT NULL,
+    deadline timestamptz NOT NULL,
+    author_id uuid NOT NULL,
+    executor_id uuid NOT NULL,
+    tester_id uuid NOT NULL,
+    CONSTRAINT task_pkey PRIMARY KEY (id),
+    CONSTRAINT fkey_task_project FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE,
+    CONSTRAINT fkey_task_author FOREIGN KEY (author_id) REFERENCES users(id),
+    CONSTRAINT fkey_task_executor FOREIGN KEY (executor_id) REFERENCES users(id),
+    CONSTRAINT fkey_task_tester FOREIGN KEY (tester_id) REFERENCES users(id)
 )
 
 TABLESPACE pg_default;
