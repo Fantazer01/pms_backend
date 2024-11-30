@@ -2,13 +2,17 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
+	"net/http"
 	"os"
 	project_http "pms_backend/pms_api/internal/api/http/project"
 	"pms_backend/pms_api/internal/config"
-	project_repository "pms_backend/pms_api/internal/repository/project/mock"
+	"pms_backend/pms_api/internal/pkg/model"
+	project_repository "pms_backend/pms_api/internal/repository/project/postgres"
 	project_service "pms_backend/pms_api/internal/service/project"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -55,11 +59,16 @@ func (a *App) initLog(ctx context.Context) error {
 }
 
 func (a *App) initDb(ctx context.Context) error {
+	db, err := pgxpool.New(ctx, a.config.Database.ConnectionString)
+	if err != nil {
+		return fmt.Errorf("initialize db connection: %w", err)
+	}
+	a.db = db
 	return nil
 }
 
 func (a *App) initService(ctx context.Context) error {
-	a.projectService = project_service.NewProjectService(project_repository.NewMockProjectRepository())
+	a.projectService = project_service.NewProjectService(project_repository.NewRepository(a.db))
 	return nil
 }
 
@@ -83,6 +92,18 @@ func (a *App) initSwagger(ctx context.Context) error {
 }
 
 func (a *App) initMiddleware(ctx context.Context) error {
+	a.router.HTTPErrorHandler = func(err error, c echo.Context) {
+		code := http.StatusInternalServerError
+		if he, ok := err.(*echo.HTTPError); ok {
+			code = he.Code
+		}
+		c.Logger().Error(err)
+		err = c.JSON(code, model.Message{Message: "Internal server error"})
+		if err != nil {
+			c.Logger().Error(err)
+		}
+	}
+
 	return nil
 }
 
