@@ -47,12 +47,18 @@ func (h *handler) GetProjects(c echo.Context) error {
 		PageIndex: pageIndex,
 		PageSize:  pageSize,
 	}
-	projects, err := h.projectService.GetProjectsPaged(c.Request().Context(), pageInfo)
+	projects, countProjects, err := h.projectService.GetProjectsPaged(c.Request().Context(), pageInfo)
 	if err != nil {
 		slog.Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
 	}
-	return c.JSON(http.StatusOK, model.ProjectsPaged{Projects: projects})
+	return c.JSON(http.StatusOK,
+		model.ProjectsPaged{
+			PageIndex: pageIndex,
+			PageSize:  pageSize,
+			Total:     countProjects,
+			Projects:  projects,
+		})
 }
 
 // GetProjectByID
@@ -186,12 +192,18 @@ func (h *handler) GetArchivedProjects(c echo.Context) error {
 		PageIndex: pageIndex,
 		PageSize:  pageSize,
 	}
-	projects, err := h.projectService.GetArchivedProjectsPaged(c.Request().Context(), pageInfo)
+	projects, countProjects, err := h.projectService.GetArchivedProjectsPaged(c.Request().Context(), pageInfo)
 	if err != nil {
 		slog.Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
 	}
-	return c.JSON(http.StatusOK, model.ProjectsPaged{Projects: projects})
+	return c.JSON(http.StatusOK,
+		model.ProjectsPaged{
+			PageIndex: pageIndex,
+			PageSize:  pageSize,
+			Total:     countProjects,
+			Projects:  projects,
+		})
 }
 
 // ArchiveProject
