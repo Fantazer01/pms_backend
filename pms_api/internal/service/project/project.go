@@ -21,12 +21,12 @@ func NewProjectService(r interfaces.ProjectRepository) *projectService {
 	}
 }
 
-func (s *projectService) GetProjectsPaged(ctx context.Context, pageInfo *model.PageInfo) ([]*model.Project, error) {
-	projects, err := s.projectRepository.GetProjectsPaged(ctx, pageInfo)
+func (s *projectService) GetProjectsPaged(ctx context.Context, pageInfo *model.PageInfo) ([]*model.ProjectShort, int, error) {
+	projects, countProjects, err := s.projectRepository.GetProjectsPaged(ctx, pageInfo)
 	if err != nil {
-		return nil, fmt.Errorf("getting projects: %w", err)
+		return nil, 0, fmt.Errorf("getting projects: %w", err)
 	}
-	return projects, nil
+	return projects, countProjects, nil
 }
 
 func (s *projectService) GetProjectByID(ctx context.Context, projectID string) (*model.Project, error) {
@@ -89,12 +89,12 @@ func (s *projectService) DeleteProject(ctx context.Context, projectID string) er
 	return nil
 }
 
-func (s *projectService) GetArchivedProjectsPaged(ctx context.Context, pageInfo *model.PageInfo) ([]*model.Project, error) {
-	projects, err := s.projectRepository.GetArchivedProjectsPaged(ctx, pageInfo)
+func (s *projectService) GetArchivedProjectsPaged(ctx context.Context, pageInfo *model.PageInfo) ([]*model.ProjectShort, int, error) {
+	projects, countProjects, err := s.projectRepository.GetArchivedProjectsPaged(ctx, pageInfo)
 	if err != nil {
-		return nil, fmt.Errorf("getting archive projects: %w", err)
+		return nil, 0, fmt.Errorf("getting archive projects: %w", err)
 	}
-	return projects, nil
+	return projects, countProjects, nil
 }
 
 func (s *projectService) ArchiveProject(ctx context.Context, projectID string) error {
