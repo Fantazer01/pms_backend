@@ -37,7 +37,7 @@ func (s *projectService) GetProjectByID(ctx context.Context, projectID string) (
 	return project, nil
 }
 
-func (s *projectService) CreateProject(ctx context.Context, insertProject *model.InsertProject) error {
+func (s *projectService) CreateProject(ctx context.Context, insertProject *model.InsertProject) (*model.Project, error) {
 	now := time.Now()
 	project := &model.Project{
 		ID:          uuid.NewString(),
@@ -48,9 +48,9 @@ func (s *projectService) CreateProject(ctx context.Context, insertProject *model
 	}
 	err := s.projectRepository.CreateProject(ctx, project)
 	if err != nil {
-		return fmt.Errorf("creating project: %w", err)
+		return nil, fmt.Errorf("creating project: %w", err)
 	}
-	return nil
+	return project, nil
 }
 
 func (s *projectService) UpdateProject(ctx context.Context, projectID string, updateProject *model.InsertProject) error {
