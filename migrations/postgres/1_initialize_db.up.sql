@@ -12,7 +12,7 @@ CREATE SEQUENCE IF NOT EXISTS public.role__role_id_seq
     CACHE 1;
 
 ALTER SEQUENCE public.role__role_id_seq
-    OWNER TO postgres;
+    OWNER TO admin;
 
 -- SEQUENCE: public.project__project_id_seq
 
@@ -26,7 +26,7 @@ CREATE SEQUENCE IF NOT EXISTS public.project__project_id_seq
     CACHE 1;
 
 ALTER SEQUENCE public.project__project_id_seq
-    OWNER TO postgres;
+    OWNER TO admin;
 
 -- SEQUENCE: public.participants_project__project_id_seq
 
@@ -40,7 +40,7 @@ CREATE SEQUENCE IF NOT EXISTS public.participants_project__participants_project_
     CACHE 1;
 
 ALTER SEQUENCE public.participants_project__participants_project_id_seq
-    OWNER TO postgres;
+    OWNER TO admin;
 
 -- SEQUENCE: public.task__task_id_seq
 
@@ -54,7 +54,7 @@ CREATE SEQUENCE IF NOT EXISTS public.task__task_id_seq
     CACHE 1;
 
 ALTER SEQUENCE public.task__task_id_seq
-    OWNER TO postgres;
+    OWNER TO admin;
 
 -- Table: public.role
 
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS public.role
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.role
-    OWNER to postgres;
+    OWNER to admin;
 
 INSERT INTO public.role (name_role)
     VALUES 
@@ -97,7 +97,7 @@ CREATE TABLE IF NOT EXISTS public.user_app
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.user_app
-    OWNER to postgres;
+    OWNER to admin;
 
 INSERT INTO public.user_app (first_name, last_name, position, is_admin, login, password)
     VALUES ('Главный администратор', '', 'Администратор системы', true, 'admin', 'admin');
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS public.project
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.project
-    OWNER to postgres;
+    OWNER to admin;
 
 -- Table: public.participants_project
 
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS public.participants_project
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.participants_project
-    OWNER to postgres;
+    OWNER to admin;
 
 -- Table: public.task
 
@@ -191,5 +191,5 @@ CREATE TABLE IF NOT EXISTS public.task
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.task
-    OWNER to postgres;
+    OWNER to admin;
 
