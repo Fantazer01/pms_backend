@@ -103,12 +103,12 @@ func (h *handler) CreateProject(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Bind error"})
 	}
-	err = h.projectService.CreateProject(c.Request().Context(), insertProject)
+	project, err := h.projectService.CreateProject(c.Request().Context(), insertProject)
 	if err != nil {
 		slog.Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
 	}
-	return c.JSON(http.StatusCreated, nil)
+	return c.JSON(http.StatusCreated, project)
 }
 
 // UpdateProject

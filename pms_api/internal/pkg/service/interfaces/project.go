@@ -8,7 +8,7 @@ import (
 type ProjectService interface {
 	GetProjectsPaged(ctx context.Context, pageInfo *model.PageInfo) ([]*model.ProjectShort, int, error)
 	GetProjectByID(ctx context.Context, projectID string) (*model.Project, error)
-	CreateProject(ctx context.Context, project *model.InsertProject) error
+	CreateProject(ctx context.Context, project *model.InsertProject) (*model.Project, error)
 	UpdateProject(ctx context.Context, projectID string, project *model.InsertProject) error
 	DeleteProject(ctx context.Context, projectID string) error
 
