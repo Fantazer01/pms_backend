@@ -8,7 +8,7 @@ const (
 	getProjectByID = `
 		SELECT id, name, description, created_at, updated_at
 		FROM public.project
-		WHERE project_id = @project_id;
+		WHERE id = @project_id;
 	`
 	createProject = `
 		INSERT INTO project (id, name, description, created_at, updated_at)
