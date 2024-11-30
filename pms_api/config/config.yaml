@@ -2,5 +2,5 @@ http:
   port: :8080
   base_path: /api/v1
 db:
-  connection_string: postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable
+  connection_string: postgres://admin:pmsmephi@localhost:5432/pms-develop?sslmode=disable
 log_level: info
