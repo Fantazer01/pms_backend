@@ -9,7 +9,7 @@ type ProjectService interface {
 	GetProjectsPaged(ctx context.Context, pageInfo *model.PageInfo) ([]*model.ProjectShort, int, error)
 	GetProjectByID(ctx context.Context, projectID string) (*model.Project, error)
 	CreateProject(ctx context.Context, project *model.InsertProject) (*model.Project, error)
-	UpdateProject(ctx context.Context, projectID string, project *model.InsertProject) error
+	UpdateProject(ctx context.Context, projectID string, project *model.InsertProject) (*model.Project, error)
 	DeleteProject(ctx context.Context, projectID string) error
 
 	GetArchivedProjectsPaged(ctx context.Context, pageInfo *model.PageInfo) ([]*model.ProjectShort, int, error)

@@ -1,9 +1,11 @@
 package project
 
 import (
+	"errors"
 	"log/slog"
 	"net/http"
 	"pms_backend/pms_api/internal/pkg/model"
+	"pms_backend/pms_api/internal/pkg/pms_error"
 	"pms_backend/pms_api/internal/pkg/service/interfaces"
 	"strconv"
 
@@ -134,12 +136,12 @@ func (h *handler) UpdateProject(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Bind error"})
 	}
-	err = h.projectService.UpdateProject(c.Request().Context(), projectID, updateProject)
+	project, err := h.projectService.UpdateProject(c.Request().Context(), projectID, updateProject)
 	if err != nil {
 		slog.Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
 	}
-	return c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, project)
 }
 
 // DeleteProject
@@ -161,6 +163,9 @@ func (h *handler) DeleteProject(c echo.Context) error {
 	}
 	err := h.projectService.DeleteProject(c.Request().Context(), projectID)
 	if err != nil {
+		if errors.Is(err, pms_error.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: "Project not found"})
+		}
 		slog.Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
 	}

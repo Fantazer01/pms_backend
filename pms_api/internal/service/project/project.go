@@ -53,13 +53,13 @@ func (s *projectService) CreateProject(ctx context.Context, insertProject *model
 	return project, nil
 }
 
-func (s *projectService) UpdateProject(ctx context.Context, projectID string, updateProject *model.InsertProject) error {
+func (s *projectService) UpdateProject(ctx context.Context, projectID string, updateProject *model.InsertProject) (*model.Project, error) {
 	projectFromDb, err := s.GetProjectByID(ctx, projectID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if projectFromDb == nil {
-		return pms_error.NotFound
+		return nil, pms_error.NotFound
 	}
 	project := &model.Project{
 		ID:          projectID,
@@ -69,9 +69,9 @@ func (s *projectService) UpdateProject(ctx context.Context, projectID string, up
 	}
 	err = s.projectRepository.UpdateProject(ctx, project)
 	if err != nil {
-		return fmt.Errorf("updating project: %w", err)
+		return nil, fmt.Errorf("updating project: %w", err)
 	}
-	return nil
+	return project, nil
 }
 
 func (s *projectService) DeleteProject(ctx context.Context, projectID string) error {

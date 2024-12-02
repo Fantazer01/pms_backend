@@ -58,10 +58,23 @@ func (r *repository) CreateProject(ctx context.Context, project *model.Project) 
 }
 
 func (r *repository) UpdateProject(ctx context.Context, project *model.Project) error {
+	_, err := r.pool.Exec(ctx, updateProject, pgx.NamedArgs{
+		"id":          project.ID,
+		"name":        project.Name,
+		"description": project.Description,
+		"updated_at":  project.UpdatedAt,
+	})
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func (r *repository) DeleteProject(ctx context.Context, projectID string) error {
+	_, err := r.pool.Exec(ctx, DeleteProject, pgx.NamedArgs{"id": projectID})
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
