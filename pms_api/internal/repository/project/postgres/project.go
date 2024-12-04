@@ -71,7 +71,7 @@ func (r *repository) UpdateProject(ctx context.Context, project *model.Project) 
 }
 
 func (r *repository) DeleteProject(ctx context.Context, projectID string) error {
-	_, err := r.pool.Exec(ctx, DeleteProject, pgx.NamedArgs{"id": projectID})
+	_, err := r.pool.Exec(ctx, deleteProject, pgx.NamedArgs{"id": projectID})
 	if err != nil {
 		return err
 	}
@@ -79,13 +79,36 @@ func (r *repository) DeleteProject(ctx context.Context, projectID string) error 
 }
 
 func (r *repository) GetArchivedProjectsPaged(ctx context.Context, pageInfo *model.PageInfo) ([]*model.ProjectShort, int, error) {
-	return nil, 0, nil
+	args := pgx.NamedArgs{
+		"page_size":   pageInfo.PageSize,
+		"page_offset": pageInfo.GetOffset(),
+	}
+	rows, err := r.pool.Query(ctx, getArchiveProjectsQuery, args)
+	if err != nil {
+		return nil, 0, err
+	}
+	items, err := pgx.CollectRows(rows, pgx.RowToStructByName[project])
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return []*model.ProjectShort{}, 0, nil
+		}
+		return nil, 0, err
+	}
+	return toProjectSliceFromDb(items), 0, nil
 }
 
 func (r *repository) ArchiveProject(ctx context.Context, projectID string) error {
+	_, err := r.pool.Exec(ctx, archiveProject, pgx.NamedArgs{"id": projectID})
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func (r *repository) UnarchiveProject(ctx context.Context, projectID string) error {
+	_, err := r.pool.Exec(ctx, unarchiveProject, pgx.NamedArgs{"id": projectID})
+	if err != nil {
+		return err
+	}
 	return nil
 }

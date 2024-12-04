@@ -3,12 +3,13 @@ package postgres
 const (
 	getProjectsQuery = `
 		SELECT id, name, description, created_at, updated_at
-		FROM public.project;
+		FROM public.project
+		WHERE is_active=true
 	`
 	getProjectByID = `
 		SELECT id, name, description, created_at, updated_at
 		FROM public.project
-		WHERE id = @project_id;
+		WHERE id = @project_id
 	`
 	createProject = `
 		INSERT INTO project (id, name, description, created_at, updated_at)
@@ -22,8 +23,23 @@ const (
 		updated_at = @updated_at
 		WHERE id=@id
 	`
-	DeleteProject = `
+	deleteProject = `
 		DELETE FROM project
 		WHERE id=@id
+	`
+	getArchiveProjectsQuery = `
+		SELECT id, name, description, created_at, updated_at
+		FROM public.project
+		WHERE is_active=false
+	`
+	archiveProject = `
+		UPDATE project
+		SET is_active = false
+		WHERE id = @id
+	`
+	unarchiveProject = `
+		UPDATE project
+		SET is_active = true
+		WHERE id = @id
 	`
 )
