@@ -217,7 +217,7 @@ func (h *handler) GetArchivedProjects(c echo.Context) error {
 // @Description Archive the project by id
 // @Produce json
 // @Param project_id path string true "Project id"
-// @Success 200 {object} model.ProjectsPaged
+// @Success 204
 // @Failure 404 {object} model.Message "Project not found"
 // @Failure 422 {object} model.Message "Incorrect id of project"
 // @Failure 500 {object} model.Message "Internal server error"
@@ -241,7 +241,7 @@ func (h *handler) ArchiveProject(c echo.Context) error {
 // @Description Unarchive the project by id
 // @Produce json
 // @Param project_id path string true "Project id"
-// @Success 200 {object} model.ProjectsPaged
+// @Success 204
 // @Failure 404 {object} model.Message "Project not found"
 // @Failure 422 {object} model.Message "Incorrect id of project"
 // @Failure 500 {object} model.Message "Internal server error"
