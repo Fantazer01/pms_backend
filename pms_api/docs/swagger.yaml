@@ -25,11 +25,18 @@ definitions:
       updated_at:
         type: string
     type: object
+  model.ProjectShort:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+    type: object
   model.ProjectsPaged:
     properties:
       items:
         items:
-          $ref: '#/definitions/model.Project'
+          $ref: '#/definitions/model.ProjectShort'
         type: array
       page_index:
         type: integer
@@ -308,10 +315,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.ProjectsPaged'
+        "204":
+          description: No Content
         "404":
           description: Project not found
           schema:
@@ -474,10 +479,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/model.ProjectsPaged'
+        "204":
+          description: No Content
         "404":
           description: Project not found
           schema:
