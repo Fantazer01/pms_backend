@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS public.project
     id uuid PRIMARY KEY,
     name text COLLATE pg_catalog."default" NOT NULL,
     description text COLLATE pg_catalog."default" NOT NULL,
+    is_active boolean NOT NULL default true,
     created_at timestamptz NOT NULL,
     updated_at timestamptz NOT NULL
 )
