@@ -9,6 +9,11 @@ import (
 )
 
 func (r *repository) GetProjectsPaged(ctx context.Context, pageInfo *model.PageInfo) ([]*model.ProjectShort, int, error) {
+	var total int
+	err := r.pool.QueryRow(ctx, countProjectsQuery).Scan(&total)
+	if err != nil {
+		return nil, 0, err
+	}
 	args := pgx.NamedArgs{
 		"page_size":   pageInfo.PageSize,
 		"page_offset": pageInfo.GetOffset(),
@@ -24,7 +29,7 @@ func (r *repository) GetProjectsPaged(ctx context.Context, pageInfo *model.PageI
 		}
 		return nil, 0, err
 	}
-	return toProjectSliceFromDb(items), 0, nil
+	return toProjectSliceFromDb(items), total, nil
 }
 
 func (r *repository) GetProjectByID(ctx context.Context, projectID string) (*model.Project, error) {
@@ -79,6 +84,11 @@ func (r *repository) DeleteProject(ctx context.Context, projectID string) error 
 }
 
 func (r *repository) GetArchivedProjectsPaged(ctx context.Context, pageInfo *model.PageInfo) ([]*model.ProjectShort, int, error) {
+	var total int
+	err := r.pool.QueryRow(ctx, countArchiveProjectsQuery).Scan(&total)
+	if err != nil {
+		return nil, 0, err
+	}
 	args := pgx.NamedArgs{
 		"page_size":   pageInfo.PageSize,
 		"page_offset": pageInfo.GetOffset(),
@@ -94,7 +104,7 @@ func (r *repository) GetArchivedProjectsPaged(ctx context.Context, pageInfo *mod
 		}
 		return nil, 0, err
 	}
-	return toProjectSliceFromDb(items), 0, nil
+	return toProjectSliceFromDb(items), total, nil
 }
 
 func (r *repository) ArchiveProject(ctx context.Context, projectID string) error {
