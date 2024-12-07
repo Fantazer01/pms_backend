@@ -29,7 +29,7 @@ func (r *repository) GetProjectsPaged(ctx context.Context, pageInfo *model.PageI
 		}
 		return nil, 0, err
 	}
-	return toProjectSliceFromDb(items), total, nil
+	return toProjectShortsFromDb(items), total, nil
 }
 
 func (r *repository) GetProjectByID(ctx context.Context, projectID string) (*model.Project, error) {
@@ -104,7 +104,7 @@ func (r *repository) GetArchivedProjectsPaged(ctx context.Context, pageInfo *mod
 		}
 		return nil, 0, err
 	}
-	return toProjectSliceFromDb(items), total, nil
+	return toProjectShortsFromDb(items), total, nil
 }
 
 func (r *repository) ArchiveProject(ctx context.Context, projectID string) error {
