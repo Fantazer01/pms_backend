@@ -13,19 +13,15 @@ type project struct {
 	UpdatedAt   time.Time `db:"updated_at"`
 }
 
-func toProjectSliceFromDb(projectsFromDb []project) []*model.ProjectShort {
+func toProjectShortsFromDb(projectsFromDb []project) []*model.ProjectShort {
 	projects := make([]*model.ProjectShort, len(projectsFromDb))
 	for i := range projects {
-		projects[i] = toProjectShortFromDb(projectsFromDb[i])
+		projects[i] = &model.ProjectShort{
+			ID:   projectsFromDb[i].ID,
+			Name: projectsFromDb[i].Name,
+		}
 	}
 	return projects
-}
-
-func toProjectShortFromDb(projectFromDb project) *model.ProjectShort {
-	return &model.ProjectShort{
-		ID:   projectFromDb.ID,
-		Name: projectFromDb.Name,
-	}
 }
 
 func toProjectFromDb(projectFromDb project) *model.Project {
