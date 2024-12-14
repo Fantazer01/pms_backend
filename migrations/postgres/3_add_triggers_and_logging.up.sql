@@ -77,6 +77,20 @@ BEGIN
 	ELSE
 		RETURN NEW;
 	END IF;
+	IF TG_TABLE_NAME = 'task' THEN
+		IF TG_OP = "INSERT" THEN
+			UPDATE task
+			SET 
+				projectname = (SELECT name FROM project WHERE project_id = NEW.project_id),
+				firstname_author = (SELECT first_name FROM users WHERE user_id = NEW.author_id),
+				lastname_author = (SELECT last_name FROM users WHERE user_id = NEW.author_id),
+				firstname_executor = (SELECT first_name FROM users WHERE user_id = NEW.executor_id),
+				lastname_executor = (SELECT last_name FROM users WHERE user_id = NEW.executor_id),
+				firstname_tester = (SELECT first_name FROM users WHERE user_id = NEW.tester_id),
+				lastname_tester = (SELECT last_name FROM users WHERE user_id = NEW.tester_id)
+			WHERE id = NEW.id;
+		END IF;
+	END IF;
 	EXCEPTION
 		WHEN OTHERS THEN
 			RETURN NULL;
@@ -104,3 +118,6 @@ CREATE OR REPLACE TRIGGER trigger_after_operation_project AFTER INSERT OR UPDATE
 FOR EACH ROW EXECUTE PROCEDURE public.after_operation_function();
 CREATE OR REPLACE TRIGGER trigger_after_operation_task AFTER INSERT OR UPDATE OR DELETE ON public.task
 FOR EACH ROW EXECUTE PROCEDURE public.after_operation_function();
+
+
+

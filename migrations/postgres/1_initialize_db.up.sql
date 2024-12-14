@@ -1,3 +1,5 @@
+CREATE ROLE admin WITH LOGIN SUPERUSER PASSWORD 'strongPass123';
+
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- SEQUENCE: public.role__role_id_seq
@@ -116,10 +118,17 @@ CREATE TABLE IF NOT EXISTS public.task
     author_id uuid NOT NULL,
     executor_id uuid NOT NULL,
     tester_id uuid NOT NULL,
-    CONSTRAINT fkey_task_project FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE,
+    CONSTRAINT fkey_task_project FOREIGN KEY (project_id) REFERENCES project(id)ON DELETE CASCADE,
+	projectname text COLLATE pg_catalog."default",
     CONSTRAINT fkey_task_author FOREIGN KEY (author_id) REFERENCES users(id),
+	firstname_author text COLLATE pg_catalog."default",
+    lastname_author text COLLATE pg_catalog."default",
     CONSTRAINT fkey_task_executor FOREIGN KEY (executor_id) REFERENCES users(id),
-    CONSTRAINT fkey_task_tester FOREIGN KEY (tester_id) REFERENCES users(id)
+	firstname_executor text COLLATE pg_catalog."default",
+    lastname_executor text COLLATE pg_catalog."default",
+    CONSTRAINT fkey_task_tester FOREIGN KEY (tester_id) REFERENCES users(id),
+	firstname_tester text COLLATE pg_catalog."default",
+    lastname_tester text COLLATE pg_catalog."default"
 )
 
 TABLESPACE pg_default;

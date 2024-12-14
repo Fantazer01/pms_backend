@@ -1,11 +1,12 @@
 DROP INDEX IF EXISTS role_name_idx;
 DROP INDEX IF EXISTS users_idx;
 DROP INDEX IF EXISTS project_name_idx;
-DROP INDEX IF EXISTS data_creation_idx;
+DROP INDEX IF EXISTS created_at_idx;
+DROP INDEX IF EXISTS updated_at_idx;
 DROP INDEX IF EXISTS participant_project_user_id_idx;
 DROP INDEX IF EXISTS task_name_idx;
 DROP INDEX IF EXISTS task_status_idx;
-DROP INDEX IF EXISTS task_data_creation_idx;
-DROP INDEX IF EXISTS task_data_deadline_idx;
+DROP INDEX IF EXISTS task_created_at;
+DROP INDEX IF EXISTS task_deadline_idx;
 DROP INDEX IF EXISTS task_executor_author_idx;
 DROP INDEX IF EXISTS task_executor_tester_idx;
