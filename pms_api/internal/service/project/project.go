@@ -142,7 +142,7 @@ func (s *projectService) GetProjectMembers(ctx context.Context, projectID string
 	return members, nil
 }
 
-func (s *projectService) AddProjectMember(ctx context.Context, projectID, userID string) error {
+func (s *projectService) AddProjectMember(ctx context.Context, projectID, userID, ruleID string) error {
 	projectFromDb, err := s.GetProjectByID(ctx, projectID)
 	if err != nil {
 		return err
@@ -150,14 +150,14 @@ func (s *projectService) AddProjectMember(ctx context.Context, projectID, userID
 	if projectFromDb == nil {
 		return pms_error.NotFound
 	}
-	err = s.projectRepository.AddProjectMember(ctx, projectID, userID)
+	err = s.projectRepository.AddProjectMember(ctx, projectID, userID, ruleID)
 	if err != nil {
 		return fmt.Errorf("adding member to project: %w", err)
 	}
 	return nil
 }
 
-func (s *projectService) DeleteProjectMember(ctx context.Context, projectID, userID string) error {
+func (s *projectService) DeleteProjectMember(ctx context.Context, projectID, userID, ruleID string) error {
 	projectFromDb, err := s.GetProjectByID(ctx, projectID)
 	if err != nil {
 		return err
@@ -165,7 +165,7 @@ func (s *projectService) DeleteProjectMember(ctx context.Context, projectID, use
 	if projectFromDb == nil {
 		return pms_error.NotFound
 	}
-	err = s.projectRepository.DeleteProjectMember(ctx, projectID, userID)
+	err = s.projectRepository.DeleteProjectMember(ctx, projectID, userID, ruleID)
 	if err != nil {
 		return fmt.Errorf("deleting member from project: %w", err)
 	}
