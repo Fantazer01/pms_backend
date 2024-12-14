@@ -33,3 +33,20 @@ func toProjectFromDb(projectFromDb project) *model.Project {
 		UpdatedAt:   projectFromDb.UpdatedAt,
 	}
 }
+
+type user struct {
+	ID       string `db:"id"`
+	Username string `db:"username"`
+	FullName string `json:"full_name"`
+}
+
+func toUserShortsFromRepo(usersFromDb []user) []*model.UserShort {
+	users := make([]*model.UserShort, len(usersFromDb))
+	for i := range users {
+		users[i] = &model.UserShort{
+			ID:       usersFromDb[i].ID,
+			Username: usersFromDb[i].Username,
+		}
+	}
+	return users
+}

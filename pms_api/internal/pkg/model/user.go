@@ -11,8 +11,10 @@ type User struct {
 	UpdatedAt  string `json:"updated_at"`
 }
 
-type Users struct {
-	Users []*User `json:"items"`
+type UserShort struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	FullName string `json:"full_name"`
 }
 
 type UsersPaged struct {
