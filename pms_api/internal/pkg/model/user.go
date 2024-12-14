@@ -17,9 +17,17 @@ type UserShort struct {
 	FullName string `json:"full_name"`
 }
 
+type UserInserted struct {
+	Username   string `json:"username"`
+	Email      string `json:"email"`
+	FirstName  string `json:"first_name"`
+	MiddleName string `json:"middle_name"`
+	LastName   string `json:"last_name"`
+}
+
 type UsersPaged struct {
-	PageIndex int     `json:"page_index"`
-	PageSize  int     `json:"page_size"`
-	Total     int     `json:"total"`
-	Users     []*User `json:"items"`
+	PageIndex int          `json:"page_index"`
+	PageSize  int          `json:"page_size"`
+	Total     int          `json:"total"`
+	Users     []*UserShort `json:"items"`
 }
