@@ -76,3 +76,17 @@ func (h *handler) UpdateUser(c echo.Context) error {
 func (h *handler) DeleteUser(c echo.Context) error {
 	return c.JSON(http.StatusNotImplemented, nil)
 }
+
+// GetUserProject
+// @Tags User
+// @Summary Get user projects
+// @Description Get user projects
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} model.ProjectsPaged
+// @Failure 404 {object} model.Message "User not found"
+// @Failure 500 {object} model.Message
+// @Router /users/{id}/projects [get]
+func (h *handler) GetUserProjects(c echo.Context) error {
+	return c.JSON(http.StatusNotImplemented, nil)
+}

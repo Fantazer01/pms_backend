@@ -6,8 +6,8 @@ const PATH_TO_CONFIG = "./pms_api/config/config.yaml"
 
 type Config struct {
 	Http     Http
-	Database Database
-	LogLevel string `yaml:"log_level"`
+	Database Database `yaml:"db"`
+	LogLevel string   `yaml:"log_level"`
 }
 
 type Http struct {

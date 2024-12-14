@@ -349,7 +349,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.UsersPaged'
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
         "404":
           description: Project not found
           schema:
@@ -674,6 +676,29 @@ paths:
         "400":
           description: Bad Request
       summary: Update user
+      tags:
+      - User
+  /users/{id}/projects:
+    get:
+      consumes:
+      - application/json
+      description: Get user projects
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.ProjectsPaged'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Message'
+      summary: Get user projects
       tags:
       - User
 swagger: "2.0"

@@ -11,6 +11,12 @@ type User struct {
 	UpdatedAt  string `json:"updated_at"`
 }
 
+type UserShort struct {
+	ID       string `json:"id"`
+	Username string `json:"username"`
+	FullName string `json:"full_name"`
+}
+
 type UsersPaged struct {
 	PageIndex int     `json:"page_index"`
 	PageSize  int     `json:"page_size"`

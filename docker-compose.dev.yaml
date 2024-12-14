@@ -16,10 +16,12 @@ services:
     container_name: pms_postgresql
     expose:
       - 5432
+    ports:
+      - 5432:5432
     restart: always
     environment:
       - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=PMSMEPHI
+      - POSTGRES_PASSWORD=pmsmephi
       - POSTGRES_DB=pms-develop
       - POSTGRES_HOST=5432
     healthcheck:

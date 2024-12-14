@@ -1,15 +1,20 @@
 package project
 
-import "github.com/labstack/echo/v4"
+import (
+	"pms_backend/pms_api/internal/pkg/service/interfaces"
 
-func (h *handler) RegirterRoutes(router *echo.Group) {
+	"github.com/labstack/echo/v4"
+)
+
+func RegisterRoutes(router *echo.Group, s interfaces.ProjectService) {
+	h := NewHandler(s)
 	projects := router.Group("/projects")
 	{
 		projects.GET("", h.GetProjects)
-		projects.GET("/:id", h.GetProjectByID)
+		projects.GET("/:project_id", h.GetProjectByID)
 		projects.POST("", h.CreateProject)
-		projects.PUT("/:id", h.UpdateProject)
-		projects.DELETE("/:id", h.DeleteProject)
+		projects.PUT("/:project_id", h.UpdateProject)
+		projects.DELETE("/:project_id", h.DeleteProject)
 
 		projects.GET("/archived", h.GetArchivedProjects)
 		projects.PUT("/:project_id/archive", h.ArchiveProject)

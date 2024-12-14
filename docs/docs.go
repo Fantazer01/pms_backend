@@ -408,7 +408,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.UsersPaged"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.User"
+                            }
                         }
                     },
                     "404": {
@@ -859,6 +862,41 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request"
+                    }
+                }
+            }
+        },
+        "/users/{id}/projects": {
+            "get": {
+                "description": "Get user projects",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get user projects",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.ProjectsPaged"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
                     }
                 }
             }

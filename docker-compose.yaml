@@ -19,7 +19,7 @@ services:
     restart: always
     environment:
       - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=PMSMEPHI
+      - POSTGRES_PASSWORD=pmsmephi
       - POSTGRES_DB=pms-develop
       - POSTGRES_HOST=5432
     healthcheck:
