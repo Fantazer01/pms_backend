@@ -2,8 +2,8 @@ DROP TRIGGER IF EXISTS trigger_before_operation_participants_project ON public.p
 DROP TRIGGER IF EXISTS trigger_after_operation_participants_project ON public.participants_project;
 DROP TRIGGER IF EXISTS trigger_before_operation_role ON public.role;
 DROP TRIGGER IF EXISTS trigger_after_operation_role ON public.role;
-DROP TRIGGER IF EXISTS trigger_before_operation_user_app ON public.user_app;
-DROP TRIGGER IF EXISTS trigger_after_operation_user_app ON public.user_app;
+DROP TRIGGER IF EXISTS trigger_before_operation_users ON public.users;
+DROP TRIGGER IF EXISTS trigger_after_operation_users ON public.users;
 DROP TRIGGER IF EXISTS trigger_before_operation_project ON public.project;
 DROP TRIGGER IF EXISTS trigger_after_operation_project ON public.project;
 DROP TRIGGER IF EXISTS trigger_before_operation_task ON public.task;

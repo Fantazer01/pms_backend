@@ -1,5 +1,5 @@
 DROP INDEX IF EXISTS role_name_idx;
-DROP INDEX IF EXISTS user_app_idx;
+DROP INDEX IF EXISTS users_idx;
 DROP INDEX IF EXISTS project_name_idx;
 DROP INDEX IF EXISTS data_creation_idx;
 DROP INDEX IF EXISTS participant_project_user_id_idx;

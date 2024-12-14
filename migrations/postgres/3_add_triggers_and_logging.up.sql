@@ -35,7 +35,7 @@ BEGIN
 		ELSE
 			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,uuid_generate_v5(uuid_nil(), NEW.role_id::text),false);
 		END IF;
-	ELSIF TG_TABLE_NAME = 'user_app' THEN
+	ELSIF TG_TABLE_NAME = 'users' THEN
 		IF TG_OP = 'DELETE' THEN
 			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,uuid_generate_v5(uuid_nil(), OLD.user_id::text),false);
 		ELSE
@@ -88,7 +88,7 @@ CREATE OR REPLACE TRIGGER trigger_before_operation_participants_project BEFORE I
 FOR EACH ROW EXECUTE PROCEDURE public.before_operation_function();
 CREATE OR REPLACE TRIGGER trigger_before_operation_role BEFORE INSERT OR UPDATE OR DELETE ON public.role
 FOR EACH ROW EXECUTE PROCEDURE public.before_operation_function();
-CREATE OR REPLACE TRIGGER trigger_before_operation_user_app BEFORE INSERT OR UPDATE OR DELETE ON public.user_app
+CREATE OR REPLACE TRIGGER trigger_before_operation_users BEFORE INSERT OR UPDATE OR DELETE ON public.users
 FOR EACH ROW EXECUTE PROCEDURE public.before_operation_function();
 CREATE OR REPLACE TRIGGER trigger_before_operation_project BEFORE INSERT OR UPDATE OR DELETE ON public.project
 FOR EACH ROW EXECUTE PROCEDURE public.before_operation_function();
@@ -98,7 +98,7 @@ CREATE OR REPLACE TRIGGER trigger_after_operation_participants_project AFTER INS
 FOR EACH ROW EXECUTE PROCEDURE public.after_operation_function();
 CREATE OR REPLACE TRIGGER trigger_after_operation_role AFTER INSERT OR UPDATE OR DELETE ON public.role
 FOR EACH ROW EXECUTE PROCEDURE public.after_operation_function();
-CREATE OR REPLACE TRIGGER trigger_after_operation_user_app AFTER INSERT OR UPDATE OR DELETE ON public.user_app
+CREATE OR REPLACE TRIGGER trigger_after_operation_users AFTER INSERT OR UPDATE OR DELETE ON public.users
 FOR EACH ROW EXECUTE PROCEDURE public.after_operation_function();
 CREATE OR REPLACE TRIGGER trigger_after_operation_project AFTER INSERT OR UPDATE OR DELETE ON public.project
 FOR EACH ROW EXECUTE PROCEDURE public.after_operation_function();
