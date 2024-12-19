@@ -7,10 +7,13 @@ import (
 	"net/http"
 	"os"
 	project_http "pms_backend/pms_api/internal/api/http/project"
+	user_handler "pms_backend/pms_api/internal/api/http/user"
 	"pms_backend/pms_api/internal/config"
 	"pms_backend/pms_api/internal/pkg/model"
 	project_repository "pms_backend/pms_api/internal/repository/project/postgres"
+	user_repository "pms_backend/pms_api/internal/repository/user/postgres"
 	project_service "pms_backend/pms_api/internal/service/project"
+	user_service "pms_backend/pms_api/internal/service/user"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
@@ -110,5 +113,8 @@ func (a *App) initMiddleware(ctx context.Context) error {
 func (a *App) registerRoutes(ctx context.Context) error {
 	api := a.router.Group(a.config.Http.BasePath)
 	project_http.RegisterRoutes(api, a.projectService)
+	user_handler.NewHandler(
+		user_service.NewUserService(user_repository.NewUserRepository(a.db)),
+	).RegisterRoutes(api)
 	return nil
 }
