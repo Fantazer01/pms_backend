@@ -42,7 +42,6 @@ func (s *userService) CreateUser(ctx context.Context, u *model.UserInserted) (*m
 	user := &model.User{
 		ID:         uuid.NewString(),
 		Username:   u.Username,
-		Email:      u.Email,
 		FirstName:  u.FirstName,
 		MiddleName: u.MiddleName,
 		LastName:   u.LastName,
@@ -67,7 +66,6 @@ func (s *userService) UpdateUser(ctx context.Context, userID string, u *model.Us
 	user := &model.User{
 		ID:         userID,
 		Username:   u.Username,
-		Email:      u.Email,
 		FirstName:  u.FirstName,
 		MiddleName: u.MiddleName,
 		LastName:   u.LastName,

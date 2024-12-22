@@ -62,7 +62,6 @@ func (r *userRepository) CreateUser(ctx context.Context, user *model.User) error
 	_, err := r.pool.Exec(ctx, createUser, pgx.NamedArgs{
 		"id":          user.ID,
 		"login":       user.Username,
-		"email":       user.Email,
 		"first_name":  user.FirstName,
 		"middle_name": user.MiddleName,
 		"last_name":   user.LastName,
@@ -76,7 +75,6 @@ func (r *userRepository) UpdateUser(ctx context.Context, user *model.User) error
 	_, err := r.pool.Exec(ctx, updateUser, pgx.NamedArgs{
 		"id":          user.ID,
 		"login":       user.Username,
-		"email":       user.Email,
 		"first_name":  user.FirstName,
 		"middle_name": user.MiddleName,
 		"last_name":   user.LastName,

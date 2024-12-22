@@ -29,7 +29,6 @@ func toUserFromRepo(userFromDb user) *model.User {
 	return &model.User{
 		ID:         userFromDb.ID,
 		Username:   userFromDb.Username,
-		Email:      userFromDb.Email,
 		FirstName:  userFromDb.FirstName,
 		MiddleName: userFromDb.MiddleName,
 		LastName:   userFromDb.LastName,

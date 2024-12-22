@@ -5,7 +5,6 @@ import "time"
 type User struct {
 	ID         string    `json:"id"`
 	Username   string    `json:"username"`
-	Email      string    `json:"email"`
 	FirstName  string    `json:"first_name"`
 	MiddleName string    `json:"middle_name"`
 	LastName   string    `json:"last_name"`
@@ -21,7 +20,6 @@ type UserShort struct {
 
 type UserInserted struct {
 	Username   string `json:"username"`
-	Email      string `json:"email"`
 	FirstName  string `json:"first_name"`
 	MiddleName string `json:"middle_name"`
 	LastName   string `json:"last_name"`
