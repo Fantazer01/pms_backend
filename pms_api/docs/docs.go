@@ -1086,9 +1086,6 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "email": {
-                    "type": "string"
-                },
                 "first_name": {
                     "type": "string"
                 },
@@ -1099,6 +1096,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "middle_name": {
+                    "type": "string"
+                },
+                "position": {
                     "type": "string"
                 },
                 "updated_at": {
@@ -1112,9 +1112,6 @@ const docTemplate = `{
         "model.UserInserted": {
             "type": "object",
             "properties": {
-                "email": {
-                    "type": "string"
-                },
                 "first_name": {
                     "type": "string"
                 },
@@ -1122,6 +1119,12 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "middle_name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "position": {
                     "type": "string"
                 },
                 "username": {

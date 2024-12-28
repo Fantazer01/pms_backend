@@ -80,8 +80,6 @@ definitions:
     properties:
       created_at:
         type: string
-      email:
-        type: string
       first_name:
         type: string
       id:
@@ -90,6 +88,8 @@ definitions:
         type: string
       middle_name:
         type: string
+      position:
+        type: string
       updated_at:
         type: string
       username:
@@ -97,13 +97,15 @@ definitions:
     type: object
   model.UserInserted:
     properties:
-      email:
-        type: string
       first_name:
         type: string
       last_name:
         type: string
       middle_name:
+        type: string
+      password:
+        type: string
+      position:
         type: string
       username:
         type: string
