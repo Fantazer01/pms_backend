@@ -32,6 +32,7 @@ func toUserFromRepo(userFromDb user) *model.User {
 		FirstName:  userFromDb.FirstName,
 		MiddleName: userFromDb.MiddleName,
 		LastName:   userFromDb.LastName,
+		Position:   userFromDb.Position,
 		CreatedAt:  userFromDb.CreatedAt,
 		UpdatedAt:  userFromDb.UpdatedAt,
 	}

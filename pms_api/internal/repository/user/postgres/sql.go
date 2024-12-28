@@ -11,22 +11,22 @@ const (
 		ORDER BY login OFFSET @offset LIMIT @page_size
 	`
 	getUserByID = `
-		SELECT id, login, email, first_name, middle_name, last_name, created_at, updated_at
+		SELECT id, login, first_name, middle_name, last_name, position, created_at, updated_at
 		FROM users
 		WHERE id = @id
 	`
 	createUser = `
-		INSERT INTO users(id, login, email, first_name, middle_name, last_name, created_at, updated_at)
-		VALUES (@id, @login, @email, @first_name, @middle_name, @last_name, @created_at, @updated_at)
+		INSERT INTO users(id, login, password, first_name, middle_name, last_name, position, is_admin, created_at, updated_at)
+		VALUES (@id, @login, @password, @first_name, @middle_name, @last_name, @position, false, @created_at, @updated_at)
 	`
 	updateUser = `
 		UPDATE users
 		SET
 		login = @login,
-		email = @email,
 		first_name = @first_name,
 		middle_name = @middle_name,
 		last_name = @last_name,
+		position = @position,
 		updated_at = @updated_at
 		WHERE id = @id
 	`
@@ -35,5 +35,9 @@ const (
 		WHERE id = @id
 	`
 	getProjectsOfUserQuery = `
+		SELECT p.id, p.name
+		FROM project p
+		JOIN participants_project pp on pp.project_id = p.id
+		WHERE pp.user_id = @user_id
 	`
 )

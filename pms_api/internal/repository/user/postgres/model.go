@@ -16,6 +16,7 @@ type user struct {
 	FirstName  string    `db:"first_name"`
 	MiddleName string    `db:"middle_name"`
 	LastName   string    `db:"last_name"`
+	Position   string    `db:"position"`
 	CreatedAt  time.Time `db:"created_at"`
 	UpdatedAt  time.Time `db:"updated_at"`
 }

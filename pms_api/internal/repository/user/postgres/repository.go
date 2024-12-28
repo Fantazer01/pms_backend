@@ -62,9 +62,11 @@ func (r *userRepository) CreateUser(ctx context.Context, user *model.User) error
 	_, err := r.pool.Exec(ctx, createUser, pgx.NamedArgs{
 		"id":          user.ID,
 		"login":       user.Username,
+		"password":    user.Password,
 		"first_name":  user.FirstName,
 		"middle_name": user.MiddleName,
 		"last_name":   user.LastName,
+		"position":    user.Position,
 		"created_at":  user.CreatedAt,
 		"updated_at":  user.UpdatedAt,
 	})
@@ -78,6 +80,7 @@ func (r *userRepository) UpdateUser(ctx context.Context, user *model.User) error
 		"first_name":  user.FirstName,
 		"middle_name": user.MiddleName,
 		"last_name":   user.LastName,
+		"position":    user.Position,
 		"updated_at":  user.UpdatedAt,
 	})
 	return err

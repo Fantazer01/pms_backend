@@ -63,7 +63,9 @@ CREATE TABLE IF NOT EXISTS public.users
     "position" text COLLATE pg_catalog."default" NOT NULL,
     is_admin boolean NOT NULL,
     login text COLLATE pg_catalog."default" NOT NULL,
-    password text COLLATE pg_catalog."default" NOT NULL
+    password bytea NOT NULL,
+    created_at timestamptz NOT NULL,
+    updated_at timestamptz NOT NULL
 )
 
 TABLESPACE pg_default;
@@ -71,8 +73,8 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.users
     OWNER to admin;
 
-INSERT INTO public.users (id, first_name, middle_name, last_name, position, is_admin, login, password)
-    VALUES ('445e2563-67d1-474e-9b8b-ba325dc17ac8', 'Главный администратор', '', '', 'Администратор системы', true, 'admin', 'admin');
+INSERT INTO public.users (id, first_name, middle_name, last_name, position, is_admin, login, password, created_at, updated_at)
+    VALUES ('445e2563-67d1-474e-9b8b-ba325dc17ac8', 'Главный администратор', '', '', 'Администратор системы', true, 'admin', '�iv��A��M�߱g��s�K��o*�H�', 'NOW()', 'NOW()');
 
 -- Table: public.project
 

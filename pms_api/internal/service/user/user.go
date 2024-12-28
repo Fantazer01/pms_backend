@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"crypto/sha256"
 	"fmt"
 	"pms_backend/pms_api/internal/pkg/model"
 	"pms_backend/pms_api/internal/pkg/pms_error"
@@ -38,17 +39,25 @@ func (s *userService) GetUserByID(ctx context.Context, userID string) (*model.Us
 }
 
 func (s *userService) CreateUser(ctx context.Context, u *model.UserInserted) (*model.User, error) {
+	hash := sha256.New()
+	_, err := hash.Write([]byte(u.Password))
+	if err != nil {
+		return nil, fmt.Errorf("creating user: %w", err)
+	}
+	pas := hash.Sum(nil)
 	now := time.Now()
 	user := &model.User{
 		ID:         uuid.NewString(),
 		Username:   u.Username,
+		Password:   pas,
 		FirstName:  u.FirstName,
 		MiddleName: u.MiddleName,
 		LastName:   u.LastName,
+		Position:   u.Position,
 		CreatedAt:  now,
 		UpdatedAt:  now,
 	}
-	err := s.userRepository.CreateUser(ctx, user)
+	err = s.userRepository.CreateUser(ctx, user)
 	if err != nil {
 		return nil, fmt.Errorf("creating user: %w", err)
 	}
@@ -69,6 +78,7 @@ func (s *userService) UpdateUser(ctx context.Context, userID string, u *model.Us
 		FirstName:  u.FirstName,
 		MiddleName: u.MiddleName,
 		LastName:   u.LastName,
+		Position:   u.Position,
 		UpdatedAt:  time.Now(),
 	}
 	err = s.userRepository.UpdateUser(ctx, user)
