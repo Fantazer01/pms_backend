@@ -80,8 +80,6 @@ definitions:
     properties:
       created_at:
         type: string
-      email:
-        type: string
       first_name:
         type: string
       id:
@@ -90,7 +88,33 @@ definitions:
         type: string
       middle_name:
         type: string
+      position:
+        type: string
       updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+  model.UserInserted:
+    properties:
+      first_name:
+        type: string
+      last_name:
+        type: string
+      middle_name:
+        type: string
+      password:
+        type: string
+      position:
+        type: string
+      username:
+        type: string
+    type: object
+  model.UserShort:
+    properties:
+      full_name:
+        type: string
+      id:
         type: string
       username:
         type: string
@@ -99,7 +123,7 @@ definitions:
     properties:
       items:
         items:
-          $ref: '#/definitions/model.User'
+          $ref: '#/definitions/model.UserShort'
         type: array
       page_index:
         type: integer
@@ -349,7 +373,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.UsersPaged'
+            items:
+              $ref: '#/definitions/model.User'
+            type: array
         "404":
           description: Project not found
           schema:
@@ -621,6 +647,13 @@ paths:
       consumes:
       - application/json
       description: Create user
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserInserted'
       produces:
       - application/json
       responses:
@@ -636,6 +669,12 @@ paths:
       consumes:
       - application/json
       description: Delete User
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -650,6 +689,12 @@ paths:
       consumes:
       - application/json
       description: Get user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -664,6 +709,18 @@ paths:
       consumes:
       - application/json
       description: Update user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserInserted'
       produces:
       - application/json
       responses:
@@ -674,6 +731,37 @@ paths:
         "400":
           description: Bad Request
       summary: Update user
+      tags:
+      - User
+  /users/{id}/projects:
+    get:
+      consumes:
+      - application/json
+      description: Get user projects
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Project'
+            type: array
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Message'
+      summary: Get user projects
       tags:
       - User
 swagger: "2.0"

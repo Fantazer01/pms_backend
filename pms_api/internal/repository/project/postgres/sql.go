@@ -10,6 +10,7 @@ const (
 		SELECT id, name, description, created_at, updated_at
 		FROM public.project
 		WHERE is_active = true
+		ORDER BY name OFFSET @offset LIMIT @page_size
 	`
 	getProjectByID = `
 		SELECT id, name, description, created_at, updated_at
@@ -41,6 +42,7 @@ const (
 		SELECT id, name, description, created_at, updated_at
 		FROM public.project
 		WHERE is_active = false
+		ORDER BY name OFFSET @offset LIMIT @page_size
 	`
 	archiveProject = `
 		UPDATE project
