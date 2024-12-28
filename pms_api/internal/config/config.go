@@ -16,7 +16,7 @@ type Http struct {
 }
 
 type Database struct {
-	ConnectionString string `yaml:"connection_string"`
+	ConnectionString string `yaml:"connection_string" env:"DB_CONNECTION_STRING"`
 }
 
 func NewConfig() (*Config, error) {

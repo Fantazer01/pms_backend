@@ -1,6 +1,8 @@
 services:
   pms_api:
     container_name: pms_api
+    environment:
+      DB_CONNECTION_STRING: postgres://admin:pmsmephi@pms_postgresql:5432/pms-develop?sslmode=disable
     build:
       context: .
       dockerfile: docker/pms_api/pmsapi.dockerfile
