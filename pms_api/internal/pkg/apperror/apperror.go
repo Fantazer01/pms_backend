@@ -1,4 +1,4 @@
-package pms_error
+package apperror
 
 import "errors"
 
