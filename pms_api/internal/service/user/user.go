@@ -4,8 +4,8 @@ import (
 	"context"
 	"crypto/sha256"
 	"fmt"
+	"pms_backend/pms_api/internal/pkg/apperror"
 	"pms_backend/pms_api/internal/pkg/model"
-	"pms_backend/pms_api/internal/pkg/pms_error"
 	"pms_backend/pms_api/internal/pkg/repository/interfaces"
 	"time"
 
@@ -70,7 +70,7 @@ func (s *userService) UpdateUser(ctx context.Context, userID string, u *model.Us
 		return nil, err
 	}
 	if userFromDB == nil {
-		return nil, pms_error.NotFound
+		return nil, apperror.NotFound
 	}
 	user := &model.User{
 		ID:         userID,
@@ -89,7 +89,14 @@ func (s *userService) UpdateUser(ctx context.Context, userID string, u *model.Us
 }
 
 func (s *userService) DeleteUser(ctx context.Context, userID string) error {
-	err := s.userRepository.DeleteUser(ctx, userID)
+	userFromDB, err := s.GetUserByID(ctx, userID)
+	if err != nil {
+		return err
+	}
+	if userFromDB == nil {
+		return apperror.NotFound
+	}
+	err = s.userRepository.DeleteUser(ctx, userID)
 	if err != nil {
 		return fmt.Errorf("deleting user: %w", err)
 	}
