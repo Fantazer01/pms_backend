@@ -4,8 +4,8 @@ import (
 	"errors"
 	"log/slog"
 	"net/http"
+	"pms_backend/pms_api/internal/pkg/apperror"
 	"pms_backend/pms_api/internal/pkg/model"
-	"pms_backend/pms_api/internal/pkg/pms_error"
 	"pms_backend/pms_api/internal/pkg/service/interfaces"
 	"strconv"
 
@@ -85,6 +85,9 @@ func (h *handler) GetUserByID(c echo.Context) error {
 	}
 	user, err := h.userService.GetUserByID(c.Request().Context(), userID)
 	if err != nil {
+		if errors.Is(err, apperror.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: userNotFound})
+		}
 		slog.Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalError})
 	}
@@ -135,12 +138,15 @@ func (h *handler) UpdateUser(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: bindError})
 	}
-	project, err := h.userService.UpdateUser(c.Request().Context(), userID, userUpdated)
+	user, err := h.userService.UpdateUser(c.Request().Context(), userID, userUpdated)
 	if err != nil {
+		if errors.Is(err, apperror.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: userNotFound})
+		}
 		slog.Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalError})
 	}
-	return c.JSON(http.StatusOK, project)
+	return c.JSON(http.StatusOK, user)
 }
 
 // DeleteUser
@@ -160,7 +166,7 @@ func (h *handler) DeleteUser(c echo.Context) error {
 	}
 	err := h.userService.DeleteUser(c.Request().Context(), userID)
 	if err != nil {
-		if errors.Is(err, pms_error.NotFound) {
+		if errors.Is(err, apperror.NotFound) {
 			return c.JSON(http.StatusNotFound, model.Message{Message: userNotFound})
 		}
 		slog.Error(err.Error())
@@ -187,7 +193,7 @@ func (h *handler) GetUserProjects(c echo.Context) error {
 	}
 	projects, err := h.userService.GetUserProjects(c.Request().Context(), userID)
 	if err != nil {
-		if errors.Is(err, pms_error.NotFound) {
+		if errors.Is(err, apperror.NotFound) {
 			return c.JSON(http.StatusNotFound, model.Message{Message: userNotFound})
 		}
 		slog.Error(err.Error())

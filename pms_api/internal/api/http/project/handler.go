@@ -4,13 +4,21 @@ import (
 	"errors"
 	"log/slog"
 	"net/http"
+	"pms_backend/pms_api/internal/pkg/apperror"
 	"pms_backend/pms_api/internal/pkg/model"
-	"pms_backend/pms_api/internal/pkg/pms_error"
 	"pms_backend/pms_api/internal/pkg/service/interfaces"
 	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+)
+
+const (
+	internalServerError = "Internal server error"
+	incorrectProjectID  = "Incorrect project id"
+	bindError           = "Bind error"
+	incorrectUserID     = "Incorrect user id"
+	projectNotFound     = "Project not found"
 )
 
 type handler struct {
@@ -52,7 +60,7 @@ func (h *handler) GetProjects(c echo.Context) error {
 	projects, countProjects, err := h.projectService.GetProjectsPaged(c.Request().Context(), pageInfo)
 	if err != nil {
 		slog.Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
 	}
 	return c.JSON(http.StatusOK,
 		model.ProjectsPaged{
@@ -78,12 +86,15 @@ func (h *handler) GetProjects(c echo.Context) error {
 func (h *handler) GetProjectByID(c echo.Context) error {
 	projectID := c.Param("project_id")
 	if err := uuid.Validate(projectID); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Incorrect id of project"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectProjectID})
 	}
 	project, err := h.projectService.GetProjectByID(c.Request().Context(), projectID)
 	if err != nil {
+		if errors.Is(err, apperror.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: projectNotFound})
+		}
 		slog.Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
 	}
 	return c.JSON(http.StatusOK, project)
 }
@@ -103,12 +114,12 @@ func (h *handler) CreateProject(c echo.Context) error {
 	insertProject := &model.InsertProject{}
 	err := c.Bind(insertProject)
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Bind error"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: bindError})
 	}
 	project, err := h.projectService.CreateProject(c.Request().Context(), insertProject)
 	if err != nil {
 		slog.Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
 	}
 	return c.JSON(http.StatusCreated, project)
 }
@@ -129,17 +140,20 @@ func (h *handler) CreateProject(c echo.Context) error {
 func (h *handler) UpdateProject(c echo.Context) error {
 	projectID := c.Param("project_id")
 	if err := uuid.Validate(projectID); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Incorrect id of project"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectProjectID})
 	}
 	updateProject := &model.InsertProject{}
 	err := c.Bind(updateProject)
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Bind error"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: bindError})
 	}
 	project, err := h.projectService.UpdateProject(c.Request().Context(), projectID, updateProject)
 	if err != nil {
+		if errors.Is(err, apperror.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: projectNotFound})
+		}
 		slog.Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
 	}
 	return c.JSON(http.StatusOK, project)
 }
@@ -159,15 +173,15 @@ func (h *handler) UpdateProject(c echo.Context) error {
 func (h *handler) DeleteProject(c echo.Context) error {
 	projectID := c.Param("project_id")
 	if err := uuid.Validate(projectID); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Incorrect id of project"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectProjectID})
 	}
 	err := h.projectService.DeleteProject(c.Request().Context(), projectID)
 	if err != nil {
-		if errors.Is(err, pms_error.NotFound) {
-			return c.JSON(http.StatusNotFound, model.Message{Message: "Project not found"})
+		if errors.Is(err, apperror.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: projectNotFound})
 		}
 		slog.Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
 	}
 	return c.NoContent(http.StatusNoContent)
 }
@@ -200,7 +214,7 @@ func (h *handler) GetArchivedProjects(c echo.Context) error {
 	projects, countProjects, err := h.projectService.GetArchivedProjectsPaged(c.Request().Context(), pageInfo)
 	if err != nil {
 		slog.Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
 	}
 	return c.JSON(http.StatusOK,
 		model.ProjectsPaged{
@@ -225,12 +239,15 @@ func (h *handler) GetArchivedProjects(c echo.Context) error {
 func (h *handler) ArchiveProject(c echo.Context) error {
 	projectID := c.Param("project_id")
 	if err := uuid.Validate(projectID); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Incorrect id of project"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectProjectID})
 	}
 	err := h.projectService.ArchiveProject(c.Request().Context(), projectID)
 	if err != nil {
+		if errors.Is(err, apperror.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: projectNotFound})
+		}
 		slog.Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
 	}
 	return c.NoContent(http.StatusNoContent)
 }
@@ -249,12 +266,15 @@ func (h *handler) ArchiveProject(c echo.Context) error {
 func (h *handler) UnarchiveProject(c echo.Context) error {
 	projectID := c.Param("project_id")
 	if err := uuid.Validate(projectID); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Incorrect id of project"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectProjectID})
 	}
 	err := h.projectService.UnarchiveProject(c.Request().Context(), projectID)
 	if err != nil {
+		if errors.Is(err, apperror.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: projectNotFound})
+		}
 		slog.Error(err.Error())
-		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
 	}
 	return c.NoContent(http.StatusNoContent)
 }
@@ -274,11 +294,14 @@ func (h *handler) UnarchiveProject(c echo.Context) error {
 func (h *handler) GetProjectMembers(c echo.Context) error {
 	projectID := c.Param("project_id")
 	if err := uuid.Validate(projectID); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Incorrect id of project"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectProjectID})
 	}
 	users, err := h.projectService.GetProjectMembers(c.Request().Context(), projectID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
+		if errors.Is(err, apperror.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: projectNotFound})
+		}
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
 	}
 	return c.JSON(http.StatusOK, users)
 }
@@ -299,16 +322,19 @@ func (h *handler) GetProjectMembers(c echo.Context) error {
 func (h *handler) AddProjectMember(c echo.Context) error {
 	projectID := c.Param("project_id")
 	if err := uuid.Validate(projectID); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Incorrect id of project"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectProjectID})
 	}
 	userID := c.Param("user_id")
 	if err := uuid.Validate(userID); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Incorrect id of user"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectUserID})
 	}
 	roleID := ""
 	err := h.projectService.AddProjectMember(c.Request().Context(), projectID, userID, roleID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
+		if errors.Is(err, apperror.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: projectNotFound})
+		}
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
 	}
 	return c.NoContent(http.StatusNoContent)
 }
@@ -329,16 +355,19 @@ func (h *handler) AddProjectMember(c echo.Context) error {
 func (h *handler) DeleteProjectMember(c echo.Context) error {
 	projectID := c.Param("project_id")
 	if err := uuid.Validate(projectID); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Incorrect id of project"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectProjectID})
 	}
 	userID := c.Param("user_id")
 	if err := uuid.Validate(userID); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Incorrect id of user"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectUserID})
 	}
 	roleID := ""
 	err := h.projectService.DeleteProjectMember(c.Request().Context(), projectID, userID, roleID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
+		if errors.Is(err, apperror.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: projectNotFound})
+		}
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
 	}
 	return c.NoContent(http.StatusNoContent)
 }
@@ -349,7 +378,7 @@ func (h *handler) DeleteProjectMember(c echo.Context) error {
 // @Description Get project tasks
 // @Produce json
 // @Param project_id path string true "Project id"
-// @Success 200 {object} model.Tasks
+// @Success 200 {object} []model.Task
 // @Failure 404 {object} model.Message "Project not found"
 // @Failure 422 {object} model.Message "Incorrect id of project"
 // @Failure 500 {object} model.Message "Internal server error"
@@ -357,11 +386,14 @@ func (h *handler) DeleteProjectMember(c echo.Context) error {
 func (h *handler) GetProjectTasks(c echo.Context) error {
 	projectID := c.Param("project_id")
 	if err := uuid.Validate(projectID); err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: "Incorrect id of project"})
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectProjectID})
 	}
 	tasks, err := h.projectService.GetProjectTasks(c.Request().Context(), projectID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, model.Message{Message: "Internal server error"})
+		if errors.Is(err, apperror.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: projectNotFound})
+		}
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
 	}
-	return c.JSON(http.StatusOK, model.Tasks{Tasks: tasks})
+	return c.JSON(http.StatusOK, tasks)
 }
