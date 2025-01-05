@@ -39,7 +39,7 @@ const (
 		WHERE is_active = false
 	`
 	getArchiveProjectsQuery = `
-		SELECT id, name, description, created_at, updated_at
+		SELECT id, name, description, is_active, created_at, updated_at
 		FROM public.project
 		WHERE is_active = false
 		ORDER BY name OFFSET @offset LIMIT @page_size
