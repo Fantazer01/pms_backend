@@ -2,6 +2,7 @@ package task
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"pms_backend/pms_api/internal/pkg/apperror"
 	"pms_backend/pms_api/internal/pkg/model"
@@ -30,15 +31,20 @@ func (s *taskService) GetTaskByID(ctx context.Context, taskID string) (*model.Ta
 }
 
 func (s *taskService) CreateTask(ctx context.Context, t *model.TaskInserted) (*model.Task, error) {
-	now := time.Now()
+	if time.Since(t.Deadline) < 0 {
+		return nil, errors.New("пытаются установить прошедшее время дедлайна")
+	}
 	task := &model.Task{
 		ID:          uuid.NewString(),
 		Name:        t.Name,
 		Description: t.Description,
+		Status:      t.Status,
 		ProjectID:   t.ProjectID,
-		UserID:      t.UserID,
-		CreatedAt:   now,
-		UpdatedAt:   now,
+		AuthorID:    t.AuthorID,
+		ExecutorID:  t.ExecutorID,
+		TesterID:    t.TesterID,
+		CreatedAt:   time.Now(),
+		Deadline:    t.Deadline,
 	}
 	err := s.taskRepository.CreateTask(ctx, task)
 	if err != nil {
@@ -55,14 +61,20 @@ func (s *taskService) UpdateTask(ctx context.Context, taskID string, t *model.Ta
 	if taskFromDb == nil {
 		return nil, apperror.NotFound
 	}
+	if time.Since(t.Deadline) < 0 {
+		return nil, errors.New("пытаются установить прошедшее время дедлайна")
+	}
 	task := &model.Task{
 		ID:          taskID,
 		Name:        t.Name,
 		Description: t.Description,
+		Status:      t.Status,
 		ProjectID:   taskFromDb.ProjectID,
-		UserID:      taskFromDb.UserID,
+		AuthorID:    taskFromDb.AuthorID,
+		ExecutorID:  taskFromDb.ExecutorID,
+		TesterID:    taskFromDb.TesterID,
 		CreatedAt:   taskFromDb.CreatedAt,
-		UpdatedAt:   time.Now(),
+		Deadline:    t.Deadline,
 	}
 	err = s.taskRepository.UpdateTask(ctx, task)
 	if err != nil {
