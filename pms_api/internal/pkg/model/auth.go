@@ -13,7 +13,7 @@ type Tokens struct {
 }
 
 type AppClaims struct {
-	Name  string `json:"name"`
-	Admin bool   `json:"admin"`
+	Username string `json:"name"`
+	Admin    bool   `json:"admin"`
 	jwt.RegisteredClaims
 }

@@ -7,14 +7,17 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	auth_handler "pms_backend/pms_api/internal/api/http/auth"
 	project_handler "pms_backend/pms_api/internal/api/http/project"
 	task_handler "pms_backend/pms_api/internal/api/http/task"
 	user_handler "pms_backend/pms_api/internal/api/http/user"
 	"pms_backend/pms_api/internal/config"
 	"pms_backend/pms_api/internal/pkg/model"
+	auth_repository "pms_backend/pms_api/internal/repository/auth/postgres"
 	project_repository "pms_backend/pms_api/internal/repository/project/postgres"
 	task_repository "pms_backend/pms_api/internal/repository/task/postgres"
 	user_repository "pms_backend/pms_api/internal/repository/user/postgres"
+	auth_service "pms_backend/pms_api/internal/service/auth"
 	project_service "pms_backend/pms_api/internal/service/project"
 	task_service "pms_backend/pms_api/internal/service/task"
 	user_service "pms_backend/pms_api/internal/service/user"
@@ -108,7 +111,7 @@ func (a *App) initMiddleware(ctx context.Context) error {
 		}
 	}
 	a.router.Use(echojwt.WithConfig(echojwt.Config{
-		SigningKey: a.config.Http.SigningKey,
+		SigningKey: []byte(a.config.Http.SigningKey),
 		Skipper: func(c echo.Context) bool {
 			loginPath, err := url.JoinPath(a.config.Http.BasePath, "login")
 			if err != nil {
@@ -139,6 +142,13 @@ func (a *App) registerRoutes(ctx context.Context) error {
 	api := a.router.Group(a.config.Http.BasePath)
 
 	handlers := []Handler{
+		auth_handler.NewHandler(
+			auth_service.NewAuthService(
+				a.config.Http.SigningKey,
+				auth_repository.NewRepository(a.db),
+			),
+		),
+
 		project_handler.NewHandler(
 			project_service.NewProjectService(project_repository.NewRepository(a.db)),
 		),
