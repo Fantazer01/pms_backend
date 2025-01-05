@@ -37,6 +37,10 @@ func (a *App) Run() error {
 }
 
 func (a *App) Stop(ctx context.Context) error {
-	//a.db.Close()
+	a.db.Close()
 	return a.stopHttpServer(ctx)
+}
+
+type Handler interface {
+	RegisterRoutes(router *echo.Group)
 }

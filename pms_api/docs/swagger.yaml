@@ -47,9 +47,15 @@ definitions:
     type: object
   model.Task:
     properties:
+      author_id:
+        type: string
       created_at:
         type: string
+      deadline:
+        type: string
       description:
+        type: string
+      executor_id:
         type: string
       id:
         type: string
@@ -57,17 +63,29 @@ definitions:
         type: string
       project_id:
         type: string
-      updated_at:
+      status:
         type: string
-      user_id:
+      tester_id:
         type: string
     type: object
-  model.Tasks:
+  model.TaskInserted:
     properties:
-      items:
-        items:
-          $ref: '#/definitions/model.Task'
-        type: array
+      author_id:
+        type: string
+      deadline:
+        type: string
+      description:
+        type: string
+      executor_id:
+        type: string
+      name:
+        type: string
+      project_id:
+        type: string
+      status:
+        type: string
+      tester_id:
+        type: string
     type: object
   model.Tokens:
     properties:
@@ -477,7 +495,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/model.Tasks'
+            items:
+              $ref: '#/definitions/model.Task'
+            type: array
         "404":
           description: Project not found
           schema:
@@ -568,6 +588,13 @@ paths:
       consumes:
       - application/json
       description: Create task
+      parameters:
+      - description: Task
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/model.TaskInserted'
       produces:
       - application/json
       responses:
@@ -575,6 +602,14 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/model.Task'
+        "422":
+          description: Incorrect request body (bind error)
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Create task
       tags:
       - Task
@@ -583,11 +618,29 @@ paths:
       consumes:
       - application/json
       description: Delete task
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "204":
           description: No Content
+        "404":
+          description: Task not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Delete task
       tags:
       - Task
@@ -595,6 +648,12 @@ paths:
       consumes:
       - application/json
       description: Get task by ID
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -602,6 +661,18 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.Task'
+        "404":
+          description: Task not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Get task by ID
       tags:
       - Task
@@ -609,6 +680,18 @@ paths:
       consumes:
       - application/json
       description: Update task
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Task
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/model.TaskInserted'
       produces:
       - application/json
       responses:
@@ -616,6 +699,18 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.Task'
+        "404":
+          description: Task not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id/Incorrect request body (bind error)
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal error
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Update task
       tags:
       - Task

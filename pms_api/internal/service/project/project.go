@@ -3,8 +3,8 @@ package project
 import (
 	"context"
 	"fmt"
+	"pms_backend/pms_api/internal/pkg/apperror"
 	"pms_backend/pms_api/internal/pkg/model"
-	"pms_backend/pms_api/internal/pkg/pms_error"
 	"pms_backend/pms_api/internal/pkg/repository/interfaces"
 	"time"
 
@@ -59,7 +59,7 @@ func (s *projectService) UpdateProject(ctx context.Context, projectID string, up
 		return nil, err
 	}
 	if projectFromDb == nil {
-		return nil, pms_error.NotFound
+		return nil, apperror.NotFound
 	}
 	project := &model.Project{
 		ID:          projectID,
@@ -80,7 +80,7 @@ func (s *projectService) DeleteProject(ctx context.Context, projectID string) er
 		return err
 	}
 	if projectFromDb == nil {
-		return pms_error.NotFound
+		return apperror.NotFound
 	}
 	err = s.projectRepository.DeleteProject(ctx, projectID)
 	if err != nil {
@@ -103,7 +103,7 @@ func (s *projectService) ArchiveProject(ctx context.Context, projectID string) e
 		return err
 	}
 	if projectFromDb == nil {
-		return pms_error.NotFound
+		return apperror.NotFound
 	}
 	err = s.projectRepository.ArchiveProject(ctx, projectID)
 	if err != nil {
@@ -118,7 +118,7 @@ func (s *projectService) UnarchiveProject(ctx context.Context, projectID string)
 		return err
 	}
 	if projectFromDb == nil {
-		return pms_error.NotFound
+		return apperror.NotFound
 	}
 	err = s.projectRepository.UnarchiveProject(ctx, projectID)
 	if err != nil {
@@ -133,7 +133,7 @@ func (s *projectService) GetProjectMembers(ctx context.Context, projectID string
 		return nil, err
 	}
 	if projectFromDb == nil {
-		return nil, pms_error.NotFound
+		return nil, apperror.NotFound
 	}
 	members, err := s.projectRepository.GetProjectMembers(ctx, projectID)
 	if err != nil {
@@ -148,7 +148,7 @@ func (s *projectService) AddProjectMember(ctx context.Context, projectID, userID
 		return err
 	}
 	if projectFromDb == nil {
-		return pms_error.NotFound
+		return apperror.NotFound
 	}
 	err = s.projectRepository.AddProjectMember(ctx, projectID, userID, ruleID)
 	if err != nil {
@@ -163,7 +163,7 @@ func (s *projectService) DeleteProjectMember(ctx context.Context, projectID, use
 		return err
 	}
 	if projectFromDb == nil {
-		return pms_error.NotFound
+		return apperror.NotFound
 	}
 	err = s.projectRepository.DeleteProjectMember(ctx, projectID, userID, ruleID)
 	if err != nil {
@@ -178,7 +178,7 @@ func (s *projectService) GetProjectTasks(ctx context.Context, projectID string) 
 		return nil, err
 	}
 	if projectFromDb == nil {
-		return nil, pms_error.NotFound
+		return nil, apperror.NotFound
 	}
 	tasks, err := s.projectRepository.GetProjectTasks(ctx, projectID)
 	if err != nil {

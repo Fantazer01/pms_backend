@@ -1,15 +1,27 @@
 package model
 
+import "time"
+
 type Task struct {
-	ID          string `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	ProjectID   string `json:"project_id"`
-	UserID      string `json:"user_id"`
-	CreatedAt   string `json:"created_at"`
-	UpdatedAt   string `json:"updated_at"`
+	ID          string    `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Status      string    `json:"status"`
+	ProjectID   string    `json:"project_id"`
+	AuthorID    string    `json:"author_id"`
+	ExecutorID  string    `json:"executor_id"`
+	TesterID    string    `json:"tester_id"`
+	CreatedAt   time.Time `json:"created_at"`
+	Deadline    time.Time `json:"deadline"`
 }
 
-type Tasks struct {
-	Tasks []*Task `json:"items"`
+type TaskInserted struct {
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Status      string    `json:"status"`
+	ProjectID   string    `json:"project_id"`
+	AuthorID    string    `json:"author_id"`
+	ExecutorID  string    `json:"executor_id"`
+	TesterID    string    `json:"tester_id"`
+	Deadline    time.Time `json:"deadline"`
 }

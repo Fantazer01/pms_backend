@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS  participants_project;
 DROP TABLE IF EXISTS  task;
+DROP TYPE status_task;
 DROP TABLE IF EXISTS  project;
 DROP TABLE IF EXISTS  users;
 DROP TABLE IF EXISTS  role;

@@ -14,20 +14,6 @@ CREATE SEQUENCE IF NOT EXISTS public.role__role_id_seq
 ALTER SEQUENCE public.role__role_id_seq
     OWNER TO admin;
 
--- SEQUENCE: public.task__task_id_seq
-
--- DROP SEQUENCE IF EXISTS public.task__task_id_seq;
-
-CREATE SEQUENCE IF NOT EXISTS public.task__task_id_seq
-    INCREMENT 1
-    START 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
-
-ALTER SEQUENCE public.task__task_id_seq
-    OWNER TO admin;
-
 -- Table: public.role
 
 -- DROP TABLE IF EXISTS public.role;
@@ -116,23 +102,24 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.participants_project
     OWNER to admin;
 
+CREATE TYPE status_task AS ENUM ('Открыта', 'В работе', 'На тестировании', 'Завершена');
+
 -- Table: public.task
 
 -- DROP TABLE IF EXISTS public.task;
 
 CREATE TABLE IF NOT EXISTS public.task
 (
-    id bigint NOT NULL DEFAULT nextval('task__task_id_seq'::regclass),
+    id uuid PRIMARY KEY,
     name text COLLATE pg_catalog."default" NOT NULL,
     description text COLLATE pg_catalog."default" NOT NULL,
-    status text COLLATE pg_catalog."default" NOT NULL,
+    status status_task NOT NULL,
     project_id uuid NOT NULL,
     created_at timestamptz NOT NULL,
     deadline timestamptz NOT NULL,
     author_id uuid NOT NULL,
     executor_id uuid NOT NULL,
     tester_id uuid NOT NULL,
-    CONSTRAINT task_pkey PRIMARY KEY (id),
     CONSTRAINT fkey_task_project FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE,
     CONSTRAINT fkey_task_author FOREIGN KEY (author_id) REFERENCES users(id),
     CONSTRAINT fkey_task_executor FOREIGN KEY (executor_id) REFERENCES users(id),

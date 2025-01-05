@@ -564,7 +564,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/model.Tasks"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Task"
+                            }
                         }
                     },
                     "404": {
@@ -668,11 +671,34 @@ const docTemplate = `{
                     "Task"
                 ],
                 "summary": "Create task",
+                "parameters": [
+                    {
+                        "description": "Task",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.TaskInserted"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.Task"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect request body (bind error)",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
                         }
                     }
                 }
@@ -691,11 +717,38 @@ const docTemplate = `{
                     "Task"
                 ],
                 "summary": "Get task by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.Task"
+                        }
+                    },
+                    "404": {
+                        "description": "Task not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect id",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
                         }
                     }
                 }
@@ -712,11 +765,47 @@ const docTemplate = `{
                     "Task"
                 ],
                 "summary": "Update task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Task",
+                        "name": "task",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.TaskInserted"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.Task"
+                        }
+                    },
+                    "404": {
+                        "description": "Task not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect id/Incorrect request body (bind error)",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
                         }
                     }
                 }
@@ -733,9 +822,36 @@ const docTemplate = `{
                     "Task"
                 ],
                 "summary": "Delete task",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Task not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect id",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
                     }
                 }
             }
@@ -1035,10 +1151,19 @@ const docTemplate = `{
         "model.Task": {
             "type": "object",
             "properties": {
+                "author_id": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
+                "deadline": {
+                    "type": "string"
+                },
                 "description": {
+                    "type": "string"
+                },
+                "executor_id": {
                     "type": "string"
                 },
                 "id": {
@@ -1050,22 +1175,40 @@ const docTemplate = `{
                 "project_id": {
                     "type": "string"
                 },
-                "updated_at": {
+                "status": {
                     "type": "string"
                 },
-                "user_id": {
+                "tester_id": {
                     "type": "string"
                 }
             }
         },
-        "model.Tasks": {
+        "model.TaskInserted": {
             "type": "object",
             "properties": {
-                "items": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Task"
-                    }
+                "author_id": {
+                    "type": "string"
+                },
+                "deadline": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "executor_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tester_id": {
+                    "type": "string"
                 }
             }
         },
