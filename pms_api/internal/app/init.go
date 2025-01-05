@@ -6,13 +6,16 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
-	project_http "pms_backend/pms_api/internal/api/http/project"
+	project_handler "pms_backend/pms_api/internal/api/http/project"
+	task_handler "pms_backend/pms_api/internal/api/http/task"
 	user_handler "pms_backend/pms_api/internal/api/http/user"
 	"pms_backend/pms_api/internal/config"
 	"pms_backend/pms_api/internal/pkg/model"
 	project_repository "pms_backend/pms_api/internal/repository/project/postgres"
+	task_repository "pms_backend/pms_api/internal/repository/task/postgres"
 	user_repository "pms_backend/pms_api/internal/repository/user/postgres"
 	project_service "pms_backend/pms_api/internal/service/project"
+	task_service "pms_backend/pms_api/internal/service/task"
 	user_service "pms_backend/pms_api/internal/service/user"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -112,9 +115,24 @@ func (a *App) initMiddleware(ctx context.Context) error {
 
 func (a *App) registerRoutes(ctx context.Context) error {
 	api := a.router.Group(a.config.Http.BasePath)
-	project_http.RegisterRoutes(api, a.projectService)
-	user_handler.NewHandler(
-		user_service.NewUserService(user_repository.NewUserRepository(a.db)),
-	).RegisterRoutes(api)
+
+	handlers := []Handler{
+		project_handler.NewHandler(
+			project_service.NewProjectService(project_repository.NewRepository(a.db)),
+		),
+
+		user_handler.NewHandler(
+			user_service.NewUserService(user_repository.NewUserRepository(a.db)),
+		),
+
+		task_handler.NewHandler(
+			task_service.NewTaskService(task_repository.NewRepository(a.db)),
+		),
+	}
+
+	for _, h := range handlers {
+		h.RegisterRoutes(api)
+	}
+
 	return nil
 }

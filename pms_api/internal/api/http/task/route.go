@@ -2,7 +2,7 @@ package task
 
 import "github.com/labstack/echo/v4"
 
-func (h *handler) RegirterRoutes(router *echo.Group) {
+func (h *handler) RegisterRoutes(router *echo.Group) {
 	task := router.Group("/task")
 	{
 		task.GET("/:task_id", h.GetTaskByID)
