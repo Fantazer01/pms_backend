@@ -65,6 +65,7 @@ func (s *projectService) UpdateProject(ctx context.Context, projectID string, up
 		ID:          projectID,
 		Name:        updateProject.Name,
 		Description: updateProject.Description,
+		IsActive:    projectFromDb.IsActive,
 		UpdatedAt:   time.Now(),
 	}
 	err = s.projectRepository.UpdateProject(ctx, project)

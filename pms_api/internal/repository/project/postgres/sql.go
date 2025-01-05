@@ -7,13 +7,13 @@ const (
 		WHERE is_active = true
 	`
 	getProjectsQuery = `
-		SELECT id, name, description, created_at, updated_at
+		SELECT id, name, description, is_active, created_at, updated_at
 		FROM public.project
 		WHERE is_active = true
 		ORDER BY name OFFSET @offset LIMIT @page_size
 	`
 	getProjectByID = `
-		SELECT id, name, description, created_at, updated_at
+		SELECT id, name, description, is_active, created_at, updated_at
 		FROM public.project
 		WHERE id = @project_id
 	`
@@ -53,5 +53,10 @@ const (
 		UPDATE project
 		SET is_active = true
 		WHERE id = @id
+	`
+	getProjectTasks = `
+		SELECT id, name, description, status, project_id, author_id, executor_id, tester_id, created_at, deadline
+		FROM task
+		WHERE project_id = @project_id
 	`
 )
