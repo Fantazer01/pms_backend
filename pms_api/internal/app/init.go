@@ -20,6 +20,7 @@ import (
 	user_service "pms_backend/pms_api/internal/service/user"
 	"strings"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -106,45 +107,30 @@ func (a *App) initMiddleware(ctx context.Context) error {
 			c.Logger().Error(err)
 		}
 	}
-
-	a.router.Use(
-		echojwt.WithConfig(echojwt.Config{
-			SigningKey: []byte(a.config.Http.SigningKey),
-			Skipper: func(c echo.Context) bool {
-				loginPath, err := url.JoinPath(a.config.Http.BasePath, "login")
-				if err != nil {
-					slog.Error("Error in registration login path: " + err.Error())
-				}
-				refreshTokenPath, err := url.JoinPath(a.config.Http.BasePath, "refresh_token")
-				if err != nil {
-					slog.Error("Error in registration refresh token path: " + err.Error())
-				}
-				if strings.Contains(c.Request().URL.Path, loginPath) ||
-					strings.Contains(c.Request().URL.Path, refreshTokenPath) {
-					return true
-				}
-				if !strings.Contains(c.Request().URL.Path, a.config.Http.BasePath) {
-					return true
-				}
+	a.router.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey: a.config.Http.SigningKey,
+		Skipper: func(c echo.Context) bool {
+			loginPath, err := url.JoinPath(a.config.Http.BasePath, "login")
+			if err != nil {
+				slog.Error("Error in registration login path: " + err.Error())
+			}
+			refreshTokenPath, err := url.JoinPath(a.config.Http.BasePath, "refresh_token")
+			if err != nil {
+				slog.Error("Error in registration refresh token path: " + err.Error())
+			}
+			if strings.Contains(c.Request().URL.Path, loginPath) ||
+				strings.Contains(c.Request().URL.Path, refreshTokenPath) {
+				return true
+			}
+			if strings.Contains(c.Request().URL.Path, a.config.Http.BasePath) {
 				return false
-			},
-			// ParseTokenFunc: func(c echo.Context, auth string) (interface{}, error) {
-			// 	token, err := jwt.ParseWithClaims(auth, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
-			// 		if token.Method.Alg() != echojwt.AlgorithmHS256 {
-			// 			return nil, &echojwt.TokenError{Token: token, Err: fmt.Errorf("unexpected jwt signing method=%v", token.Header["alg"])}
-			// 		}
-			// 		return []byte(a.config.Http.SigningKey), nil
-			// 	})
-			// 	if err != nil {
-			// 		return nil, &echojwt.TokenError{Token: token, Err: err}
-			// 	}
-			// 	if !token.Valid {
-			// 		return nil, &echojwt.TokenError{Token: token, Err: errors.New("invalid token")}
-			// 	}
-			// 	return token, nil
-			// },
-		}),
-	)
+			}
+			return true
+		},
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return new(model.AppClaims)
+		},
+	}))
 
 	return nil
 }
