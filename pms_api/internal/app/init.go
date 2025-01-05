@@ -30,7 +30,6 @@ func (a *App) init(ctx context.Context) error {
 		a.initConfig,
 		a.initLog,
 		a.initDb,
-		a.initService,
 		a.initRouter,
 		a.initSwagger,
 		a.initMiddleware,
@@ -70,11 +69,6 @@ func (a *App) initDb(ctx context.Context) error {
 		return fmt.Errorf("initialize db connection: %w", err)
 	}
 	a.db = db
-	return nil
-}
-
-func (a *App) initService(ctx context.Context) error {
-	a.projectService = project_service.NewProjectService(project_repository.NewRepository(a.db))
 	return nil
 }
 

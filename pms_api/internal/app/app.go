@@ -4,17 +4,15 @@ import (
 	"context"
 	"log/slog"
 	"pms_backend/pms_api/internal/config"
-	"pms_backend/pms_api/internal/pkg/service/interfaces"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
 )
 
 type App struct {
-	db             *pgxpool.Pool
-	config         *config.Config
-	router         *echo.Echo
-	projectService interfaces.ProjectService
+	db     *pgxpool.Pool
+	config *config.Config
+	router *echo.Echo
 }
 
 func NewApp(ctx context.Context) (*App, error) {
