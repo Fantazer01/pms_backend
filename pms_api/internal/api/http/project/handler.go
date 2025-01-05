@@ -41,6 +41,7 @@ func NewHandler(s interfaces.ProjectService) *handler {
 // @Param pageSize query string false "Page size of projects"
 // @Success 200 {object} model.ProjectsPaged
 // @Failure 500 {object} model.Message
+// @Security Login
 // @Router /projects [get]
 func (h *handler) GetProjects(c echo.Context) error {
 	qp := c.QueryParam("pageIndex")
@@ -82,6 +83,7 @@ func (h *handler) GetProjects(c echo.Context) error {
 // @Failure 404 {object} model.Message "Project not found"
 // @Failure 422 {object} model.Message "Incorrect id of project"
 // @Failure 500 {object} model.Message "Internal server error"
+// @Security Login
 // @Router /projects/{project_id} [get]
 func (h *handler) GetProjectByID(c echo.Context) error {
 	projectID := c.Param("project_id")
@@ -109,6 +111,7 @@ func (h *handler) GetProjectByID(c echo.Context) error {
 // @Success 201 {object} model.Project
 // @Failure 422 {object} model.Message "Bind error"
 // @Failure 500 {object} model.Message "Internal server error"
+// @Security Login
 // @Router /projects [post]
 func (h *handler) CreateProject(c echo.Context) error {
 	insertProject := &model.InsertProject{}
@@ -136,6 +139,7 @@ func (h *handler) CreateProject(c echo.Context) error {
 // @Failure 404 {object} model.Message "Project not found"
 // @Failure 422 {object} model.Message "Incorrect id of project/Bind error"
 // @Failure 500 {object} model.Message "Internal server error"
+// @Security Login
 // @Router /projects/{project_id} [put]
 func (h *handler) UpdateProject(c echo.Context) error {
 	projectID := c.Param("project_id")
@@ -169,6 +173,7 @@ func (h *handler) UpdateProject(c echo.Context) error {
 // @Failure 404 {object} model.Message "Project not found"
 // @Failure 422 {object} model.Message "Incorrect id of project"
 // @Failure 500 {object} model.Message "Internal server error"
+// @Security Login
 // @Router /projects/{project_id} [delete]
 func (h *handler) DeleteProject(c echo.Context) error {
 	projectID := c.Param("project_id")
@@ -195,6 +200,7 @@ func (h *handler) DeleteProject(c echo.Context) error {
 // @Param pageSize query string false "Page size of projects"
 // @Success 200 {object} model.ProjectsPaged
 // @Failure 500 {object} model.Message "Internal server error"
+// @Security Login
 // @Router /projects/archived [get]
 func (h *handler) GetArchivedProjects(c echo.Context) error {
 	qp := c.QueryParam("pageIndex")
@@ -235,6 +241,7 @@ func (h *handler) GetArchivedProjects(c echo.Context) error {
 // @Failure 404 {object} model.Message "Project not found"
 // @Failure 422 {object} model.Message "Incorrect id of project"
 // @Failure 500 {object} model.Message "Internal server error"
+// @Security Login
 // @Router /projects/{project_id}/archive [put]
 func (h *handler) ArchiveProject(c echo.Context) error {
 	projectID := c.Param("project_id")
@@ -262,6 +269,7 @@ func (h *handler) ArchiveProject(c echo.Context) error {
 // @Failure 404 {object} model.Message "Project not found"
 // @Failure 422 {object} model.Message "Incorrect id of project"
 // @Failure 500 {object} model.Message "Internal server error"
+// @Security Login
 // @Router /projects/{project_id}/unarchive [put]
 func (h *handler) UnarchiveProject(c echo.Context) error {
 	projectID := c.Param("project_id")
@@ -290,6 +298,7 @@ func (h *handler) UnarchiveProject(c echo.Context) error {
 // @Failure 404 {object} model.Message "Project not found"
 // @Failure 422 {object} model.Message "Incorrect id of project"
 // @Failure 500 {object} model.Message "Internal server error"
+// @Security Login
 // @Router /projects/{project_id}/members [get]
 func (h *handler) GetProjectMembers(c echo.Context) error {
 	projectID := c.Param("project_id")
@@ -318,6 +327,7 @@ func (h *handler) GetProjectMembers(c echo.Context) error {
 // @Failure 404 {object} model.Message "Project not found/User not found"
 // @Failure 422 {object} model.Message "Incorrect id of project/Incorrect id of user"
 // @Failure 500 {object} model.Message "Internal server error"
+// @Security Login
 // @Router /projects/{project_id}/members/{user_id} [post]
 func (h *handler) AddProjectMember(c echo.Context) error {
 	projectID := c.Param("project_id")
@@ -351,6 +361,7 @@ func (h *handler) AddProjectMember(c echo.Context) error {
 // @Failure 404 {object} model.Message "Project not found/User not found"
 // @Failure 422 {object} model.Message "Incorrect id of project/Incorrect id of user"
 // @Failure 500 {object} model.Message "Internal server error"
+// @Security Login
 // @Router /projects/{project_id}/members/{user_id} [delete]
 func (h *handler) DeleteProjectMember(c echo.Context) error {
 	projectID := c.Param("project_id")
@@ -382,6 +393,7 @@ func (h *handler) DeleteProjectMember(c echo.Context) error {
 // @Failure 404 {object} model.Message "Project not found"
 // @Failure 422 {object} model.Message "Incorrect id of project"
 // @Failure 500 {object} model.Message "Internal server error"
+// @Security Login
 // @Router /projects/{project_id}/tasks [get]
 func (h *handler) GetProjectTasks(c echo.Context) error {
 	projectID := c.Param("project_id")

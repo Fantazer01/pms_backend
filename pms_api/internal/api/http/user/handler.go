@@ -39,6 +39,7 @@ const (
 // @Param pageIndex query int false "Page index"
 // @Param pageSize query int false "Page size"
 // @Success 200 {object} model.UsersPaged
+// @Security Login
 // @Router /users [get]
 func (h *handler) GetUsers(c echo.Context) error {
 	qp := c.QueryParam("pageIndex")
@@ -77,6 +78,7 @@ func (h *handler) GetUsers(c echo.Context) error {
 // @Produce json
 // @Param id path string true "User ID"
 // @Success 200 {object} model.User
+// @Security Login
 // @Router /users/{id} [get]
 func (h *handler) GetUserByID(c echo.Context) error {
 	userID := c.Param("user_id")
@@ -102,6 +104,7 @@ func (h *handler) GetUserByID(c echo.Context) error {
 // @Produce json
 // @Param user body model.UserInserted true "User"
 // @Success 201 {object} model.User
+// @Security Login
 // @Router /users [post]
 func (h *handler) CreateUser(c echo.Context) error {
 	userInserted := &model.UserInserted{}
@@ -127,6 +130,7 @@ func (h *handler) CreateUser(c echo.Context) error {
 // @Param user body model.UserInserted true "User"
 // @Success 200 {object} model.User
 // @Failure 400
+// @Security Login
 // @Router /users/{id} [put]
 func (h *handler) UpdateUser(c echo.Context) error {
 	userID := c.Param("user_id")
@@ -158,6 +162,7 @@ func (h *handler) UpdateUser(c echo.Context) error {
 // @Param id path string true "User ID"
 // @Success 204
 // @Failure 400
+// @Security Login
 // @Router /users/{id} [delete]
 func (h *handler) DeleteUser(c echo.Context) error {
 	userID := c.Param("user_id")
@@ -185,6 +190,7 @@ func (h *handler) DeleteUser(c echo.Context) error {
 // @Success 200 {object} []model.Project
 // @Failure 404 {object} model.Message "User not found"
 // @Failure 500 {object} model.Message
+// @Security Login
 // @Router /users/{id}/projects [get]
 func (h *handler) GetUserProjects(c echo.Context) error {
 	userID := c.Param("user_id")

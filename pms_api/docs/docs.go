@@ -29,11 +29,34 @@ const docTemplate = `{
                     "Auth"
                 ],
                 "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "Authentication form",
+                        "name": "form",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.AuthForm"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/model.Tokens"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "422": {
+                        "description": "Incorrect request body (bind error)",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
                         }
                     }
                 }
@@ -61,6 +84,11 @@ const docTemplate = `{
         },
         "/projects": {
             "get": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Get projects",
                 "consumes": [
                     "application/json"
@@ -102,6 +130,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Create project",
                 "consumes": [
                     "application/json"
@@ -148,6 +181,11 @@ const docTemplate = `{
         },
         "/projects/archived": {
             "get": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Get archived projects",
                 "produces": [
                     "application/json"
@@ -188,6 +226,11 @@ const docTemplate = `{
         },
         "/projects/{project_id}": {
             "get": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Get project by ID",
                 "consumes": [
                     "application/json"
@@ -236,6 +279,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Update project",
                 "consumes": [
                     "application/json"
@@ -293,6 +341,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Delete project",
                 "consumes": [
                     "application/json"
@@ -340,6 +393,11 @@ const docTemplate = `{
         },
         "/projects/{project_id}/archive": {
             "put": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Archive the project by id",
                 "produces": [
                     "application/json"
@@ -384,6 +442,11 @@ const docTemplate = `{
         },
         "/projects/{project_id}/members": {
             "get": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Get project members",
                 "consumes": [
                     "application/json"
@@ -437,6 +500,11 @@ const docTemplate = `{
         },
         "/projects/{project_id}/members/{user_id}": {
             "post": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Add project member",
                 "consumes": [
                     "application/json"
@@ -489,6 +557,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Delete project member",
                 "consumes": [
                     "application/json"
@@ -543,6 +616,11 @@ const docTemplate = `{
         },
         "/projects/{project_id}/tasks": {
             "get": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Get project tasks",
                 "produces": [
                     "application/json"
@@ -593,6 +671,11 @@ const docTemplate = `{
         },
         "/projects/{project_id}/unarchive": {
             "put": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Unarchive the project by id",
                 "produces": [
                     "application/json"
@@ -660,6 +743,11 @@ const docTemplate = `{
         },
         "/task": {
             "post": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Create task",
                 "consumes": [
                     "application/json"
@@ -706,6 +794,11 @@ const docTemplate = `{
         },
         "/task/{id}": {
             "get": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Get task by ID",
                 "consumes": [
                     "application/json"
@@ -754,6 +847,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Update task",
                 "consumes": [
                     "application/json"
@@ -811,6 +909,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Delete task",
                 "consumes": [
                     "application/json"
@@ -858,6 +961,11 @@ const docTemplate = `{
         },
         "/users": {
             "get": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Get users",
                 "consumes": [
                     "application/json"
@@ -893,6 +1001,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Create user",
                 "consumes": [
                     "application/json"
@@ -927,6 +1040,11 @@ const docTemplate = `{
         },
         "/users/{id}": {
             "get": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Get user by ID",
                 "consumes": [
                     "application/json"
@@ -957,6 +1075,11 @@ const docTemplate = `{
                 }
             },
             "put": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Update user",
                 "consumes": [
                     "application/json"
@@ -999,6 +1122,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Delete User",
                 "consumes": [
                     "application/json"
@@ -1031,6 +1159,11 @@ const docTemplate = `{
         },
         "/users/{id}/projects": {
             "get": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
                 "description": "Get user projects",
                 "consumes": [
                     "application/json"
@@ -1078,6 +1211,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "model.AuthForm": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
         "model.InsertProject": {
             "type": "object",
             "properties": {
@@ -1311,6 +1455,14 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "Login": {
+            "description": "Type \"Bearer TOKEN\" to correctly set the API Key",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

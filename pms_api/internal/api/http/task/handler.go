@@ -40,6 +40,7 @@ func NewHandler(s interfaces.TaskService) *handler {
 // @Failure 422 {object} model.Message "Incorrect id"
 // @Failure 404 {object} model.Message "Task not found"
 // @Failure 500 {object} model.Message "Internal error"
+// @Security Login
 // @Router /task/{id} [get]
 func (h *handler) GetTaskByID(c echo.Context) error {
 	taskID := c.Param("task_id")
@@ -67,6 +68,7 @@ func (h *handler) GetTaskByID(c echo.Context) error {
 // @Success 201 {object} model.Task
 // @Failure 422 {object} model.Message "Incorrect request body (bind error)"
 // @Failure 500 {object} model.Message "Internal error"
+// @Security Login
 // @Router /task [post]
 func (h *handler) CreateTask(c echo.Context) error {
 	taskInsert := &model.TaskInserted{}
@@ -94,6 +96,7 @@ func (h *handler) CreateTask(c echo.Context) error {
 // @Failure 404 {object} model.Message "Task not found"
 // @Failure 422 {object} model.Message "Incorrect id/Incorrect request body (bind error)"
 // @Failure 500 {object} model.Message "Internal error"
+// @Security Login
 // @Router /task/{id} [put]
 func (h *handler) UpdateTask(c echo.Context) error {
 	taskID := c.Param("task_id")
@@ -127,6 +130,7 @@ func (h *handler) UpdateTask(c echo.Context) error {
 // @Failure 404 {object} model.Message "Task not found"
 // @Failure 422 {object} model.Message "Incorrect id"
 // @Failure 500 {object} model.Message "Internal error"
+// @Security Login
 // @Router /task/{id} [delete]
 func (h *handler) DeleteTask(c echo.Context) error {
 	taskID := c.Param("task_id")
