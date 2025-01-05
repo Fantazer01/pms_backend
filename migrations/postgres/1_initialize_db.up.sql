@@ -102,7 +102,7 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.participants_project
     OWNER to admin;
 
-CREATE TYPE status_task AS ENUM ('Открыта', 'В работе', 'На тестировании', 'Завершена');
+CREATE TYPE status_task AS ENUM ('Открыта', 'Отложено', 'В работе', 'На тестировании', 'На ревью', 'Завершена');
 
 -- Table: public.task
 
