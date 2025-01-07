@@ -44,7 +44,7 @@ func (h *handler) Login(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: bindError})
 	}
 
-	signedToken, err := h.authService.Authentication(c.Request().Context(), user.Login, user.Password)
+	tokens, err := h.authService.Authentication(c.Request().Context(), user.Login, user.Password)
 	if err != nil {
 		slog.Error(err.Error())
 		if errors.Is(err, apperror.Unauthorized) {
@@ -52,7 +52,7 @@ func (h *handler) Login(c echo.Context) error {
 		}
 		return c.JSON(http.StatusInternalServerError, model.Message{Message: failedGenerateToken})
 	}
-	return c.JSON(http.StatusOK, model.Tokens{AccessToken: signedToken})
+	return c.JSON(http.StatusOK, tokens)
 }
 
 // Refresh
@@ -61,20 +61,23 @@ func (h *handler) Login(c echo.Context) error {
 // @Description Refresh
 // @Accept json
 // @Produce json
+// @Param token body model.Token true "Refresh token"
 // @Success 200 {object} model.Tokens
 // @Router /refresh [post]
 func (h *handler) Refresh(c echo.Context) error {
-	return c.JSON(http.StatusNotImplemented, nil)
-}
+	refreshToken := model.Token{}
+	err := c.Bind(&refreshToken)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: bindError})
+	}
+	tokens, err := h.authService.RefreshTokens(c.Request().Context(), refreshToken.Token)
+	if err != nil {
+		slog.Error(err.Error())
+		if errors.Is(err, apperror.Unauthorized) {
+			return c.JSON(http.StatusUnauthorized, model.Message{Message: unauthorized})
+		}
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: failedGenerateToken})
+	}
 
-// Logout
-// @Tags Auth
-// @Summary Logout
-// @Description Logout
-// @Accept json
-// @Produce json
-// @Success 204
-// @Router /logout [post]
-func (h *handler) Logout(c echo.Context) error {
-	return c.JSON(http.StatusNotImplemented, nil)
+	return c.JSON(http.StatusOK, tokens)
 }

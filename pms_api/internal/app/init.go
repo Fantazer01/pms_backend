@@ -118,7 +118,7 @@ func (a *App) initMiddleware(ctx context.Context) error {
 			if err != nil {
 				slog.Error("Error in registration login path: " + err.Error())
 			}
-			refreshTokenPath, err := url.JoinPath(a.config.Http.BasePath, "refresh_token")
+			refreshTokenPath, err := url.JoinPath(a.config.Http.BasePath, "refresh")
 			if err != nil {
 				slog.Error("Error in registration refresh token path: " + err.Error())
 			}
