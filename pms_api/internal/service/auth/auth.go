@@ -45,6 +45,7 @@ func (s *authService) Authentication(ctx context.Context, login string, password
 	claims := &model.AppClaims{
 		Username: login,
 		RegisteredClaims: jwt.RegisteredClaims{
+			Subject:   user.ID,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),
 		},
 	}

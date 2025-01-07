@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	auth_handler "pms_backend/pms_api/internal/api/http/auth"
+	profile_handler "pms_backend/pms_api/internal/api/http/profile"
 	project_handler "pms_backend/pms_api/internal/api/http/project"
 	task_handler "pms_backend/pms_api/internal/api/http/task"
 	user_handler "pms_backend/pms_api/internal/api/http/user"
@@ -147,6 +148,10 @@ func (a *App) registerRoutes(ctx context.Context) error {
 				a.config.Http.SigningKey,
 				auth_repository.NewRepository(a.db),
 			),
+		),
+
+		profile_handler.NewHandler(
+			user_service.NewUserService(user_repository.NewUserRepository(a.db)),
 		),
 
 		project_handler.NewHandler(
