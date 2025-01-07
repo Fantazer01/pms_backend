@@ -11,8 +11,9 @@ type Config struct {
 }
 
 type Http struct {
-	Port     string `yaml:"port"`
-	BasePath string `yaml:"base_path"`
+	Port       string `yaml:"port"`
+	BasePath   string `yaml:"base_path"`
+	SigningKey string `yaml:"signing_key"`
 }
 
 type Database struct {

@@ -5,20 +5,28 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"net/url"
 	"os"
+	auth_handler "pms_backend/pms_api/internal/api/http/auth"
+	profile_handler "pms_backend/pms_api/internal/api/http/profile"
 	project_handler "pms_backend/pms_api/internal/api/http/project"
 	task_handler "pms_backend/pms_api/internal/api/http/task"
 	user_handler "pms_backend/pms_api/internal/api/http/user"
 	"pms_backend/pms_api/internal/config"
 	"pms_backend/pms_api/internal/pkg/model"
+	auth_repository "pms_backend/pms_api/internal/repository/auth/postgres"
 	project_repository "pms_backend/pms_api/internal/repository/project/postgres"
 	task_repository "pms_backend/pms_api/internal/repository/task/postgres"
 	user_repository "pms_backend/pms_api/internal/repository/user/postgres"
+	auth_service "pms_backend/pms_api/internal/service/auth"
 	project_service "pms_backend/pms_api/internal/service/project"
 	task_service "pms_backend/pms_api/internal/service/task"
 	user_service "pms_backend/pms_api/internal/service/user"
+	"strings"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -103,6 +111,30 @@ func (a *App) initMiddleware(ctx context.Context) error {
 			c.Logger().Error(err)
 		}
 	}
+	a.router.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey: []byte(a.config.Http.SigningKey),
+		Skipper: func(c echo.Context) bool {
+			loginPath, err := url.JoinPath(a.config.Http.BasePath, "login")
+			if err != nil {
+				slog.Error("Error in registration login path: " + err.Error())
+			}
+			refreshTokenPath, err := url.JoinPath(a.config.Http.BasePath, "refresh")
+			if err != nil {
+				slog.Error("Error in registration refresh token path: " + err.Error())
+			}
+			if strings.Contains(c.Request().URL.Path, loginPath) ||
+				strings.Contains(c.Request().URL.Path, refreshTokenPath) {
+				return true
+			}
+			if strings.Contains(c.Request().URL.Path, a.config.Http.BasePath) {
+				return false
+			}
+			return true
+		},
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return new(model.AppClaims)
+		},
+	}))
 
 	return nil
 }
@@ -111,6 +143,17 @@ func (a *App) registerRoutes(ctx context.Context) error {
 	api := a.router.Group(a.config.Http.BasePath)
 
 	handlers := []Handler{
+		auth_handler.NewHandler(
+			auth_service.NewAuthService(
+				a.config.Http.SigningKey,
+				auth_repository.NewRepository(a.db),
+			),
+		),
+
+		profile_handler.NewHandler(
+			user_service.NewUserService(user_repository.NewUserRepository(a.db)),
+		),
+
 		project_handler.NewHandler(
 			project_service.NewProjectService(project_repository.NewRepository(a.db)),
 		),

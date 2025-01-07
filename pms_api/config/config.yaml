@@ -1,6 +1,7 @@
 http:
   port: :8080
   base_path: /api/v1
+  signing_key: secret
 db:
   connection_string: postgres://admin:pmsmephi@localhost:5432/pms-develop?sslmode=disable
 log_level: info

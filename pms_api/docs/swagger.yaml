@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  model.AuthForm:
+    properties:
+      login:
+        type: string
+      password:
+        type: string
+    type: object
   model.InsertProject:
     properties:
       description:
@@ -89,6 +96,11 @@ definitions:
       tester_id:
         type: string
     type: object
+  model.Token:
+    properties:
+      token:
+        type: string
+    type: object
   model.Tokens:
     properties:
       access_token:
@@ -104,6 +116,8 @@ definitions:
         type: string
       id:
         type: string
+      is_admin:
+        type: boolean
       last_name:
         type: string
       middle_name:
@@ -119,6 +133,8 @@ definitions:
     properties:
       first_name:
         type: string
+      is_admin:
+        type: boolean
       last_name:
         type: string
       middle_name:
@@ -166,6 +182,13 @@ paths:
       consumes:
       - application/json
       description: Login
+      parameters:
+      - description: Authentication form
+        in: body
+        name: form
+        required: true
+        schema:
+          $ref: '#/definitions/model.AuthForm'
       produces:
       - application/json
       responses:
@@ -173,22 +196,38 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.Tokens'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect request body (bind error)
+          schema:
+            $ref: '#/definitions/model.Message'
       summary: Login
       tags:
       - Auth
-  /logout:
-    post:
+  /profile:
+    get:
       consumes:
       - application/json
-      description: Logout
+      description: Send information about authorized user
       produces:
       - application/json
       responses:
-        "204":
-          description: No Content
-      summary: Logout
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
+      summary: Send information about authorized user
       tags:
-      - Auth
+      - Profile
   /projects:
     get:
       consumes:
@@ -214,6 +253,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Get projects
       tags:
       - Project
@@ -243,6 +284,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Create project
       tags:
       - Project
@@ -274,6 +317,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Delete project
       tags:
       - Project
@@ -306,6 +351,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Get project by ID
       tags:
       - Project
@@ -344,6 +391,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Update project
       tags:
       - Project
@@ -373,6 +422,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Archive the project by id
       tags:
       - Project
@@ -408,6 +459,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Get project members
       tags:
       - Project
@@ -444,6 +497,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Delete project member
       tags:
       - Project
@@ -479,6 +534,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Add project member
       tags:
       - Project
@@ -512,6 +569,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Get project tasks
       tags:
       - Project
@@ -541,6 +600,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Unarchive the project by id
       tags:
       - Project
@@ -567,6 +628,8 @@ paths:
           description: Internal server error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Get archived projects
       tags:
       - Project
@@ -575,6 +638,13 @@ paths:
       consumes:
       - application/json
       description: Refresh
+      parameters:
+      - description: Refresh token
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/model.Token'
       produces:
       - application/json
       responses:
@@ -612,6 +682,8 @@ paths:
           description: Internal error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Create task
       tags:
       - Task
@@ -643,6 +715,8 @@ paths:
           description: Internal error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Delete task
       tags:
       - Task
@@ -675,6 +749,8 @@ paths:
           description: Internal error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Get task by ID
       tags:
       - Task
@@ -713,6 +789,8 @@ paths:
           description: Internal error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Update task
       tags:
       - Task
@@ -737,6 +815,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.UsersPaged'
+      security:
+      - Login: []
       summary: Get users
       tags:
       - User
@@ -758,6 +838,8 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/model.User'
+      security:
+      - Login: []
       summary: Create user
       tags:
       - User
@@ -779,6 +861,8 @@ paths:
           description: No Content
         "400":
           description: Bad Request
+      security:
+      - Login: []
       summary: Delete user
       tags:
       - User
@@ -799,6 +883,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/model.User'
+      security:
+      - Login: []
       summary: Get user by ID
       tags:
       - User
@@ -827,6 +913,8 @@ paths:
             $ref: '#/definitions/model.User'
         "400":
           description: Bad Request
+      security:
+      - Login: []
       summary: Update user
       tags:
       - User
@@ -858,7 +946,15 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
       summary: Get user projects
       tags:
       - User
+securityDefinitions:
+  Login:
+    description: Type "Bearer TOKEN" to correctly set the API Key
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
