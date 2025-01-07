@@ -96,6 +96,11 @@ definitions:
       tester_id:
         type: string
     type: object
+  model.Token:
+    properties:
+      token:
+        type: string
+    type: object
   model.Tokens:
     properties:
       access_token:
@@ -111,6 +116,8 @@ definitions:
         type: string
       id:
         type: string
+      is_admin:
+        type: boolean
       last_name:
         type: string
       middle_name:
@@ -126,6 +133,8 @@ definitions:
     properties:
       first_name:
         type: string
+      is_admin:
+        type: boolean
       last_name:
         type: string
       middle_name:
@@ -196,19 +205,6 @@ paths:
           schema:
             $ref: '#/definitions/model.Message'
       summary: Login
-      tags:
-      - Auth
-  /logout:
-    post:
-      consumes:
-      - application/json
-      description: Logout
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-      summary: Logout
       tags:
       - Auth
   /profile:
@@ -642,6 +638,13 @@ paths:
       consumes:
       - application/json
       description: Refresh
+      parameters:
+      - description: Refresh token
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/model.Token'
       produces:
       - application/json
       responses:

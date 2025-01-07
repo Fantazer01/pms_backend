@@ -62,26 +62,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/logout": {
-            "post": {
-                "description": "Logout",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Logout",
-                "responses": {
-                    "204": {
-                        "description": "No Content"
-                    }
-                }
-            }
-        },
         "/profile": {
             "get": {
                 "security": [
@@ -765,6 +745,17 @@ const docTemplate = `{
                     "Auth"
                 ],
                 "summary": "Refresh",
+                "parameters": [
+                    {
+                        "description": "Refresh token",
+                        "name": "token",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Token"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -1393,6 +1384,14 @@ const docTemplate = `{
                 }
             }
         },
+        "model.Token": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
         "model.Tokens": {
             "type": "object",
             "properties": {
@@ -1416,6 +1415,9 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
+                "is_admin": {
+                    "type": "boolean"
+                },
                 "last_name": {
                     "type": "string"
                 },
@@ -1438,6 +1440,9 @@ const docTemplate = `{
             "properties": {
                 "first_name": {
                     "type": "string"
+                },
+                "is_admin": {
+                    "type": "boolean"
                 },
                 "last_name": {
                     "type": "string"
