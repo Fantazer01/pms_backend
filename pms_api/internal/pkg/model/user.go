@@ -24,6 +24,7 @@ type UserShort struct {
 type UserInserted struct {
 	Username   string `json:"username"`
 	Password   string `json:"password"`
+	IsAdmin    bool   `json:"is_admin"`
 	FirstName  string `json:"first_name"`
 	MiddleName string `json:"middle_name"`
 	LastName   string `json:"last_name"`

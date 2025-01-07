@@ -63,6 +63,7 @@ func (r *userRepository) CreateUser(ctx context.Context, user *model.User) error
 		"id":          user.ID,
 		"login":       user.Username,
 		"password":    user.Password,
+		"is_admin":    user.IsAdmin,
 		"first_name":  user.FirstName,
 		"middle_name": user.MiddleName,
 		"last_name":   user.LastName,

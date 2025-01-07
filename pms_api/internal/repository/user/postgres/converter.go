@@ -29,6 +29,7 @@ func toUserFromRepo(userFromDb user) *model.User {
 	return &model.User{
 		ID:         userFromDb.ID,
 		Username:   userFromDb.Username,
+		IsAdmin:    userFromDb.IsAdmin,
 		FirstName:  userFromDb.FirstName,
 		MiddleName: userFromDb.MiddleName,
 		LastName:   userFromDb.LastName,

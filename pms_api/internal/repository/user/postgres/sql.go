@@ -11,13 +11,13 @@ const (
 		ORDER BY login OFFSET @offset LIMIT @page_size
 	`
 	getUserByID = `
-		SELECT id, login, first_name, middle_name, last_name, position, created_at, updated_at
+		SELECT id, login, is_admin, first_name, middle_name, last_name, position, created_at, updated_at
 		FROM users
 		WHERE id = @id
 	`
 	createUser = `
-		INSERT INTO users(id, login, password, first_name, middle_name, last_name, position, is_admin, created_at, updated_at)
-		VALUES (@id, @login, @password, @first_name, @middle_name, @last_name, @position, false, @created_at, @updated_at)
+		INSERT INTO users(id, login, password, is_admin, first_name, middle_name, last_name, position, is_admin, created_at, updated_at)
+		VALUES (@id, @login, @password, @is_admin, @first_name, @middle_name, @last_name, @position, false, @created_at, @updated_at)
 	`
 	updateUser = `
 		UPDATE users

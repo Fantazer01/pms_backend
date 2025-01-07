@@ -13,6 +13,7 @@ type userShort struct {
 type user struct {
 	ID         string    `db:"id"`
 	Username   string    `db:"login"`
+	IsAdmin    bool      `db:"is_admin"`
 	FirstName  string    `db:"first_name"`
 	MiddleName string    `db:"middle_name"`
 	LastName   string    `db:"last_name"`
