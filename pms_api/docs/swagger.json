@@ -76,6 +76,40 @@
                 }
             }
         },
+        "/profile": {
+            "get": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
+                "description": "Send information about authorized user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Send information about authorized user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    }
+                }
+            }
+        },
         "/projects": {
             "get": {
                 "security": [

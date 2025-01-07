@@ -211,6 +211,27 @@ paths:
       summary: Logout
       tags:
       - Auth
+  /profile:
+    get:
+      consumes:
+      - application/json
+      description: Send information about authorized user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
+      summary: Send information about authorized user
+      tags:
+      - Profile
   /projects:
     get:
       consumes:
