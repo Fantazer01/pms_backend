@@ -84,14 +84,14 @@ ALTER TABLE IF EXISTS public.project
 
 CREATE TABLE IF NOT EXISTS public.participants_project
 (
-    id uuid PRIMARY KEY,
     user_id uuid NOT NULL,
     project_id uuid NOT NULL,
     role_id integer NOT NULL,
     is_admin_project boolean NOT NULL,
-    CONSTRAINT fkey_participants_project_role FOREIGN KEY (role_id) REFERENCES role(id),
-    CONSTRAINT fkey_participants_project_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fkey_participants_project_project FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE
+    
+    CONSTRAINT user_in_project_pk PRIMARY KEY (user_id, project_id),
+    CONSTRAINT user_in_project_user_fk FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT user_in_project_project_fk FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE
 )
 
 TABLESPACE pg_default;
