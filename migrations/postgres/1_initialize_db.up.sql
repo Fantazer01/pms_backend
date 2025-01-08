@@ -33,8 +33,7 @@ ALTER TABLE IF EXISTS public.role
 INSERT INTO public.role (name_role)
     VALUES 
         ('Руководитель проекта'),
-        ('Исполнитель'),
-        ('Тестировщик');
+        ('Участник');
 
 -- Table: public.user_app
 
