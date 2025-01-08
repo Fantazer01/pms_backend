@@ -25,8 +25,14 @@ func (r *repository) GetProjectMembers(ctx context.Context, projectID string) ([
 	return toUserShortsFromRepo(items), nil
 }
 
-func (r *repository) AddProjectMember(ctx context.Context, projectID, userID, roleID string) error {
-	return nil
+func (r *repository) AddProjectMember(ctx context.Context, projectID string, member *model.Member) error {
+	_, err := r.pool.Exec(ctx, insertUserToProject, pgx.NamedArgs{
+		"project_id":       projectID,
+		"user_id":          member.UserID,
+		"role":             member.Role,
+		"is_admin_project": member.IsAdminProject,
+	})
+	return err
 }
 
 func (r *repository) DeleteProjectMember(ctx context.Context, projectID, userID string) error {

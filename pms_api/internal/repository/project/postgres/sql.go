@@ -60,6 +60,19 @@ const (
 		JOIN participants_project pp on pp.user_id = u.id
 		WHERE pp.project_id = @project_id
 	`
+	insertUserToProject = `
+		START TRANSACTION;
+
+		SELECT r.id INTO @role_id
+		FROM role r
+		WHERE r.name = @role;
+
+		IF @role_id != '' THEN
+			INSERT INTO participants_project(user_id, project_id, role_id, is_admin_project)
+			VALUES (@user_id, @project_id, @role_id, @is_admin_project)
+		END IF;
+		
+	`
 	deleteUserFromProject = `
 		DELETE FROM participants_project
 		WHERE project_id = @project_id AND user_id = @user_id

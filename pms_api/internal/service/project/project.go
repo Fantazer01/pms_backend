@@ -143,7 +143,7 @@ func (s *projectService) GetProjectMembers(ctx context.Context, projectID string
 	return members, nil
 }
 
-func (s *projectService) AddProjectMember(ctx context.Context, projectID, userID, ruleID string) error {
+func (s *projectService) AddProjectMember(ctx context.Context, projectID string, member *model.Member) error {
 	projectFromDb, err := s.GetProjectByID(ctx, projectID)
 	if err != nil {
 		return err
@@ -151,7 +151,7 @@ func (s *projectService) AddProjectMember(ctx context.Context, projectID, userID
 	if projectFromDb == nil {
 		return apperror.NotFound
 	}
-	err = s.projectRepository.AddProjectMember(ctx, projectID, userID, ruleID)
+	err = s.projectRepository.AddProjectMember(ctx, projectID, member)
 	if err != nil {
 		return fmt.Errorf("adding member to project: %w", err)
 	}

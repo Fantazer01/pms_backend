@@ -17,7 +17,7 @@ type ProjectRepository interface {
 	UnarchiveProject(ctx context.Context, projectID string) error
 
 	GetProjectMembers(ctx context.Context, projectID string) ([]*model.UserShort, error)
-	AddProjectMember(ctx context.Context, projectID, userID, roleID string) error
+	AddProjectMember(ctx context.Context, projectID string, member *model.Member) error
 	DeleteProjectMember(ctx context.Context, projectID, userID string) error
 
 	GetProjectTasks(ctx context.Context, projectID string) ([]*model.Task, error)
