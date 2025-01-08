@@ -39,3 +39,11 @@ Replace **NAME_DOCKER_COMPOSE_FILE** on docker-compose.yaml or docker-compose.de
 docker compose -f {NAME_DOCKER_COMPOSE_FILE} up -d
 ```
 
+## Initialize
+Temporary solution, copy all files from folder migrations with suffix ".up.sql" and run them to PostgreSql
+
+When you launch app the first time, you need to run initialize script for creating base objects.
+```bash
+./init_data
+``` 
+
