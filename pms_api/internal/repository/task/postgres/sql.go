@@ -18,7 +18,7 @@ const (
 		author_id = @author_id,
 		executor_id = @executor_id,
 		tester_id = @tester_id,
-		deadline = @deadline,
+		deadline = @deadline
 		WHERE id = @id
 	`
 	deleteTask = `

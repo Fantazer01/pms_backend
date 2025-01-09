@@ -3,13 +3,14 @@ package postgres
 import (
 	"context"
 	"errors"
+	"pms_backend/pms_api/internal/pkg/apperror"
 	"pms_backend/pms_api/internal/pkg/model"
 
 	"github.com/jackc/pgx/v5"
 )
 
 func (r *repository) GetTaskByID(ctx context.Context, taskID string) (*model.Task, error) {
-	rows, err := r.pool.Query(ctx, getTaskByID, pgx.NamedArgs{"task_id": taskID})
+	rows, err := r.pool.Query(ctx, getTaskByID, pgx.NamedArgs{"id": taskID})
 	if err != nil {
 		return nil, err
 	}
@@ -17,7 +18,7 @@ func (r *repository) GetTaskByID(ctx context.Context, taskID string) (*model.Tas
 	task, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[task])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, nil
+			return nil, apperror.NotFound
 		}
 		return nil, err
 	}

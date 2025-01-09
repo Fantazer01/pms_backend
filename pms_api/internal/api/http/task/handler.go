@@ -2,8 +2,10 @@ package task
 
 import (
 	"errors"
+	"io"
 	"log/slog"
 	"net/http"
+	"os"
 	"pms_backend/pms_api/internal/pkg/apperror"
 	"pms_backend/pms_api/internal/pkg/model"
 	"pms_backend/pms_api/internal/pkg/service/interfaces"
@@ -17,6 +19,7 @@ const (
 	internalError   = "Internal server error"
 	taskNotFound    = "Task not found"
 	bindError       = "Bind error"
+	fileLoaded      = "File was loaded"
 )
 
 type handler struct {
@@ -49,10 +52,10 @@ func (h *handler) GetTaskByID(c echo.Context) error {
 	}
 	task, err := h.taskService.GetTaskByID(c.Request().Context(), taskID)
 	if err != nil {
+		slog.Error(err.Error())
 		if errors.Is(err, apperror.NotFound) {
 			return c.JSON(http.StatusNotFound, model.Message{Message: taskNotFound})
 		}
-		slog.Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalError})
 	}
 	return c.JSON(http.StatusOK, task)
@@ -146,4 +149,33 @@ func (h *handler) DeleteTask(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalError})
 	}
 	return c.NoContent(http.StatusNoContent)
+}
+
+// UploadFile
+// @Tags Task
+// @Summary Upload task
+// @Description Upload task
+// @Success 200 {object} model.Message
+// @Security Login
+// @Router /task/{id}/upload [post]
+func (h *handler) UploadFile(c echo.Context) error {
+	c.Request().ParseMultipartForm(10 << 20)
+	file, handler, err := c.Request().FormFile("file")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	dst, err := os.Create("./uploads/" + handler.Filename)
+	if err != nil {
+		return err
+	}
+	defer dst.Close()
+
+	_, err = io.Copy(dst, file)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, model.Message{Message: fileLoaded})
 }
