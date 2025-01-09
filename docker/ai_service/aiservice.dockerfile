@@ -20,4 +20,4 @@ RUN pip install --upgrade \
     urllib3 \
     cryptography
 
-COPY . /app/
+COPY ./AI_service /app/
