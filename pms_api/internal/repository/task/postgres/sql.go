@@ -15,6 +15,7 @@ const (
 		SET
 		name = @name,
 		description = @description,
+		status = @status,
 		author_id = @author_id,
 		executor_id = @executor_id,
 		tester_id = @tester_id,
