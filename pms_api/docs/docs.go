@@ -1006,6 +1006,12 @@ const docTemplate = `{
                 "summary": "Get users",
                 "parameters": [
                     {
+                        "type": "boolean",
+                        "description": "Get admins or users",
+                        "name": "isAdmin",
+                        "in": "query"
+                    },
+                    {
                         "type": "integer",
                         "description": "Page index",
                         "name": "pageIndex",
@@ -1488,6 +1494,9 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "string"
+                },
+                "is_admin": {
+                    "type": "boolean"
                 },
                 "username": {
                     "type": "string"
