@@ -12,8 +12,9 @@ type Project struct {
 }
 
 type ProjectShort struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	IsActive bool   `json:"is_active"`
 }
 
 type InsertProject struct {

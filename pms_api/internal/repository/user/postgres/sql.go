@@ -8,7 +8,7 @@ const (
 	getUsersQuery = `
 		SELECT id, login, first_name, middle_name, last_name
 		FROM users
-		ORDER BY login OFFSET @offset LIMIT @page_size
+		ORDER BY login LIMIT @page_size OFFSET @offset
 	`
 	getUserByID = `
 		SELECT id, login, is_admin, first_name, middle_name, last_name, position, created_at, updated_at
