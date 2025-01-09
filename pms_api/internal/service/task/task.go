@@ -31,7 +31,7 @@ func (s *taskService) GetTaskByID(ctx context.Context, taskID string) (*model.Ta
 }
 
 func (s *taskService) CreateTask(ctx context.Context, t *model.TaskInserted) (*model.Task, error) {
-	if time.Since(t.Deadline) < 0 {
+	if time.Since(t.Deadline) > 0 {
 		return nil, errors.New("пытаются установить прошедшее время дедлайна")
 	}
 	task := &model.Task{
