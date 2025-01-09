@@ -47,3 +47,15 @@ When you launch app the first time, you need to run initialize script for creati
 ./init_data
 ``` 
 
+## API
+
+Main service "pms_api" is described in ./pms_api/docs as Swagger
+
+AI service has 1 handler on:
+```
+POST: http://localhost:8000/api/v1/ai
+BODY: {
+    "request": "some text"
+}
+```
+
