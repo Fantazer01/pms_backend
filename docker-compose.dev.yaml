@@ -35,6 +35,25 @@ services:
     volumes:
       - ./pms_pgdata:/var/lib/postgresql/data
     networks: [ "pms_services" ]
+    
+  ai_service:
+    container_name: ai_service
+    build: 
+      context: .
+      dockerfile: docker/ai_service/aiservice.dockerfile
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    ports:
+      - 8000:8000
+    environment:
+      - DATABASE_URI=postgresql://AI_db_username:AI_db_password@AI_db:5432/AI_db_dev
+
+  AI_db:
+    image: postgres
+    container_name: AI_db
+    environment:
+      - POSTGRES_USER=AI_db_username
+      - POSTGRES_PASSWORD=AI_db_password
+      - POSTGRES_DB=AI_db_dev
 
 networks:
   pms_services:
