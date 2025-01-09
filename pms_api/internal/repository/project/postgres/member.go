@@ -26,10 +26,33 @@ func (r *repository) GetProjectMembers(ctx context.Context, projectID string) ([
 }
 
 func (r *repository) AddProjectMember(ctx context.Context, projectID string, member *model.Member) error {
-	_, err := r.pool.Exec(ctx, insertUserToProject, pgx.NamedArgs{
+	rows, err := r.pool.Query(ctx, "SELECT id, name_role FROM role")
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+	type role struct {
+		ID   int    `db:"id"`
+		Name string `db:"name_role"`
+	}
+	items, err := pgx.CollectRows(rows, pgx.RowToStructByName[role])
+	if err != nil {
+		return err
+	}
+	roleID := -1
+	for _, v := range items {
+		if member.Role == v.Name {
+			roleID = v.ID
+		}
+	}
+	if roleID == -1 {
+		return errors.New("incorrect value of role")
+	}
+
+	_, err = r.pool.Exec(ctx, insertUserToProject, pgx.NamedArgs{
 		"project_id":       projectID,
 		"user_id":          member.UserID,
-		"role":             member.Role,
+		"role_id":          roleID,
 		"is_admin_project": member.IsAdminProject,
 	})
 	return err

@@ -16,6 +16,7 @@ func TestMain(t *testing.T) {
 	user := model.UserInserted{
 		Username:   "pmsuser",
 		Password:   "1234",
+		IsAdmin:    false,
 		FirstName:  "Пользователь",
 		MiddleName: "",
 		LastName:   "",
