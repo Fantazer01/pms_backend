@@ -43,6 +43,7 @@ func (s *projectService) CreateProject(ctx context.Context, insertProject *model
 		ID:          uuid.NewString(),
 		Name:        insertProject.Name,
 		Description: insertProject.Description,
+		IsActive:    true,
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}
