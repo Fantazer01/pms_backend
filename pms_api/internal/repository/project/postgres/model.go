@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"pms_backend/pms_api/internal/pkg/model"
+	"strings"
 	"time"
 )
 
@@ -37,17 +38,30 @@ func toProjectFromDb(projectFromDb project) *model.Project {
 }
 
 type user struct {
-	ID       string `db:"id"`
-	Username string `db:"username"`
-	FullName string `db:"full_name"`
+	ID         string `db:"id"`
+	Username   string `db:"login"`
+	FirstName  string `db:"first_name"`
+	MiddleName string `db:"middle_name"`
+	LastName   string `db:"last_name"`
 }
 
 func toUserShortsFromRepo(usersFromDb []user) []*model.UserShort {
 	users := make([]*model.UserShort, len(usersFromDb))
 	for i := range users {
+		fullNameSb := strings.Builder{}
+		fullNameSb.WriteString(usersFromDb[i].FirstName)
+		if usersFromDb[i].MiddleName != "" {
+			fullNameSb.WriteString(" ")
+			fullNameSb.WriteString(usersFromDb[i].MiddleName)
+		}
+		if usersFromDb[i].LastName != "" {
+			fullNameSb.WriteString(" ")
+			fullNameSb.WriteString(usersFromDb[i].LastName)
+		}
 		users[i] = &model.UserShort{
 			ID:       usersFromDb[i].ID,
 			Username: usersFromDb[i].Username,
+			FullName: fullNameSb.String(),
 		}
 	}
 	return users

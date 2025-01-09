@@ -487,7 +487,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.User"
+                                "$ref": "#/definitions/model.UserShort"
                             }
                         }
                     },
@@ -539,11 +539,13 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "string",
-                        "description": "User id",
-                        "name": "user_id",
-                        "in": "path",
-                        "required": true
+                        "description": "Project member",
+                        "name": "project_member",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Member"
+                        }
                     }
                 ],
                 "responses": {
@@ -1254,6 +1256,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Member": {
+            "type": "object",
+            "properties": {
+                "is_admin_project": {
+                    "type": "boolean"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "user_id": {
                     "type": "string"
                 }
             }

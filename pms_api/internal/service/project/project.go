@@ -128,7 +128,7 @@ func (s *projectService) UnarchiveProject(ctx context.Context, projectID string)
 	return nil
 }
 
-func (s *projectService) GetProjectMembers(ctx context.Context, projectID string) ([]*model.User, error) {
+func (s *projectService) GetProjectMembers(ctx context.Context, projectID string) ([]*model.UserShort, error) {
 	projectFromDb, err := s.GetProjectByID(ctx, projectID)
 	if err != nil {
 		return nil, err
@@ -143,7 +143,7 @@ func (s *projectService) GetProjectMembers(ctx context.Context, projectID string
 	return members, nil
 }
 
-func (s *projectService) AddProjectMember(ctx context.Context, projectID, userID, ruleID string) error {
+func (s *projectService) AddProjectMember(ctx context.Context, projectID string, member *model.Member) error {
 	projectFromDb, err := s.GetProjectByID(ctx, projectID)
 	if err != nil {
 		return err
@@ -151,14 +151,14 @@ func (s *projectService) AddProjectMember(ctx context.Context, projectID, userID
 	if projectFromDb == nil {
 		return apperror.NotFound
 	}
-	err = s.projectRepository.AddProjectMember(ctx, projectID, userID, ruleID)
+	err = s.projectRepository.AddProjectMember(ctx, projectID, member)
 	if err != nil {
 		return fmt.Errorf("adding member to project: %w", err)
 	}
 	return nil
 }
 
-func (s *projectService) DeleteProjectMember(ctx context.Context, projectID, userID, ruleID string) error {
+func (s *projectService) DeleteProjectMember(ctx context.Context, projectID, userID string) error {
 	projectFromDb, err := s.GetProjectByID(ctx, projectID)
 	if err != nil {
 		return err
@@ -166,7 +166,7 @@ func (s *projectService) DeleteProjectMember(ctx context.Context, projectID, use
 	if projectFromDb == nil {
 		return apperror.NotFound
 	}
-	err = s.projectRepository.DeleteProjectMember(ctx, projectID, userID, ruleID)
+	err = s.projectRepository.DeleteProjectMember(ctx, projectID, userID)
 	if err != nil {
 		return fmt.Errorf("deleting member from project: %w", err)
 	}
