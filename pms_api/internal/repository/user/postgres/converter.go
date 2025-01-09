@@ -19,6 +19,7 @@ func toUserShortsFromRepo(usersFromDb []userShort) []*model.UserShort {
 		users[i] = &model.UserShort{
 			ID:       usersFromDb[i].ID,
 			Username: usersFromDb[i].Username,
+			IsAdmin:  usersFromDb[i].IsAdmin,
 			FullName: sb.String(),
 		}
 	}
@@ -43,8 +44,9 @@ func toProjectShortsFromDb(projectsFromDb []projectShort) []*model.ProjectShort 
 	projects := make([]*model.ProjectShort, len(projectsFromDb))
 	for i := range projects {
 		projects[i] = &model.ProjectShort{
-			ID:   projectsFromDb[i].ID,
-			Name: projectsFromDb[i].Name,
+			ID:       projectsFromDb[i].ID,
+			Name:     projectsFromDb[i].Name,
+			IsActive: projectsFromDb[i].IsActive,
 		}
 	}
 	return projects

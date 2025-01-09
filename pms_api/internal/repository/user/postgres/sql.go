@@ -6,7 +6,7 @@ const (
 		FROM users
 	`
 	getUsersQuery = `
-		SELECT id, login, first_name, middle_name, last_name
+		SELECT id, login, is_admin, first_name, middle_name, last_name
 		FROM users
 		ORDER BY login LIMIT @page_size OFFSET @page_offset
 	`
@@ -35,7 +35,7 @@ const (
 		WHERE id = @id
 	`
 	getProjectsOfUserQuery = `
-		SELECT p.id, p.name
+		SELECT p.id, p.name, p.is_active
 		FROM project p
 		JOIN participants_project pp on pp.project_id = p.id
 		WHERE pp.user_id = @user_id

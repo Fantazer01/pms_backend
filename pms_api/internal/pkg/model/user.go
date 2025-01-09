@@ -18,6 +18,7 @@ type User struct {
 type UserShort struct {
 	ID       string `json:"id"`
 	Username string `json:"username"`
+	IsAdmin  bool   `json:"is_admin"`
 	FullName string `json:"full_name"`
 }
 
