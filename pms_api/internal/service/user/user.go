@@ -22,8 +22,8 @@ func NewUserService(r interfaces.UserRepository) *userService {
 	}
 }
 
-func (s *userService) GetUsers(ctx context.Context, pageInfo *model.PageInfo) ([]*model.UserShort, int, error) {
-	users, count, err := s.userRepository.GetUsers(ctx, pageInfo)
+func (s *userService) GetUsers(ctx context.Context, pageInfo *model.PageInfo, isAdmin *bool) ([]*model.UserShort, int, error) {
+	users, count, err := s.userRepository.GetUsers(ctx, pageInfo, isAdmin)
 	if err != nil {
 		return nil, 0, fmt.Errorf("getting users: %w", err)
 	}

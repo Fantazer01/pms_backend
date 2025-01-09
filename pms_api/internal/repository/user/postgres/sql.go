@@ -8,6 +8,8 @@ const (
 	getUsersQuery = `
 		SELECT id, login, is_admin, first_name, middle_name, last_name
 		FROM users
+	`
+	getUsersQueryTail = `
 		ORDER BY login LIMIT @page_size OFFSET @page_offset
 	`
 	getUserByID = `

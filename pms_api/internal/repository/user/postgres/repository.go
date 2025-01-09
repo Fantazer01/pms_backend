@@ -19,17 +19,25 @@ func NewUserRepository(p *pgxpool.Pool) *userRepository {
 	}
 }
 
-func (r *userRepository) GetUsers(ctx context.Context, pageInfo *model.PageInfo) ([]*model.UserShort, int, error) {
-	var countUsers int
-	err := r.pool.QueryRow(ctx, countUsersQuery).Scan(&countUsers)
-	if err != nil {
-		return nil, 0, err
-	}
+func (r *userRepository) GetUsers(ctx context.Context, pageInfo *model.PageInfo, isAdmin *bool) ([]*model.UserShort, int, error) {
+	countQuery := countUsersQuery
+	usersQuery := getUsersQuery
 	args := pgx.NamedArgs{
 		"page_size":   pageInfo.PageSize,
 		"page_offset": pageInfo.GetOffset(),
 	}
-	rows, err := r.pool.Query(ctx, getUsersQuery, args)
+	if isAdmin != nil {
+		args["is_admin"] = *isAdmin
+		countQuery += "\nWHERE is_admin = @is_admin\n"
+		usersQuery += "\nWHERE is_admin = @is_admin\n"
+		usersQuery += getUsersQueryTail
+	}
+	var countUsers int
+	err := r.pool.QueryRow(ctx, countQuery, args).Scan(&countUsers)
+	if err != nil {
+		return nil, 0, err
+	}
+	rows, err := r.pool.Query(ctx, usersQuery, args)
 	if err != nil {
 		return nil, 0, err
 	}

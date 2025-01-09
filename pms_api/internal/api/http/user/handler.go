@@ -36,12 +36,14 @@ const (
 // @Description Get users
 // @Accept json
 // @Produce json
+// @Param isAdmin query bool false "Get admins or users"
 // @Param pageIndex query int false "Page index"
 // @Param pageSize query int false "Page size"
 // @Success 200 {object} model.UsersPaged
 // @Security Login
 // @Router /users [get]
 func (h *handler) GetUsers(c echo.Context) error {
+	qIsAdmin := c.QueryParam("isAdmin")
 	qp := c.QueryParam("pageIndex")
 	pageIndex, err := strconv.Atoi(qp)
 	if err != nil || pageIndex < 1 {
@@ -56,7 +58,13 @@ func (h *handler) GetUsers(c echo.Context) error {
 		PageIndex: pageIndex,
 		PageSize:  pageSize,
 	}
-	users, countUsers, err := h.userService.GetUsers(c.Request().Context(), pageInfo)
+	var pointerIsAdmin *bool = nil
+	isAdmin, err := strconv.ParseBool(qIsAdmin)
+	if err == nil {
+		pointerIsAdmin = new(bool)
+		*pointerIsAdmin = isAdmin
+	}
+	users, countUsers, err := h.userService.GetUsers(c.Request().Context(), pageInfo, pointerIsAdmin)
 	if err != nil {
 		slog.Error(err.Error())
 		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalError})
