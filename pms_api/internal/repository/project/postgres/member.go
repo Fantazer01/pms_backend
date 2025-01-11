@@ -26,7 +26,7 @@ func (r *repository) GetProjectMembers(ctx context.Context, projectID string) ([
 	return toMembersFromRepo(items), nil
 }
 
-func (r *repository) getProjectMember(ctx context.Context, projectID string, userID string) (*model.Member, error) {
+func (r *repository) getProjectMember(ctx context.Context, projectID string, userID string) (*member, error) {
 	rows, err := r.pool.Query(ctx, getProjectMemberByID, pgx.NamedArgs{
 		"project_id": projectID,
 		"user_id":    userID,
@@ -35,7 +35,7 @@ func (r *repository) getProjectMember(ctx context.Context, projectID string, use
 		return nil, err
 	}
 	defer rows.Close()
-	item, err := pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByName[model.Member])
+	item, err := pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByName[member])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, nil
