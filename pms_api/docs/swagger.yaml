@@ -14,7 +14,7 @@ definitions:
       name:
         type: string
     type: object
-  model.Member:
+  model.MemberInserted:
     properties:
       is_admin_project:
         type: boolean
@@ -477,6 +477,73 @@ paths:
       summary: Get project members
       tags:
       - Project
+    post:
+      consumes:
+      - application/json
+      description: Add project member
+      parameters:
+      - description: Project id
+        in: path
+        name: project_id
+        required: true
+        type: string
+      - description: Project member
+        in: body
+        name: project_member
+        required: true
+        schema:
+          $ref: '#/definitions/model.MemberInserted'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Project not found/User not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "422":
+          description: Incorrect id of project/Incorrect id of user
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
+      summary: Add project member
+      tags:
+      - Project
+    put:
+      consumes:
+      - application/json
+      description: Update role and project admin right
+      parameters:
+      - description: Project member
+        in: body
+        name: project_member
+        required: true
+        schema:
+          $ref: '#/definitions/model.MemberInserted'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Project not found/User not found
+          schema:
+            $ref: '#/definitions/model.Message'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
+      summary: Update role and project admin right
+      tags:
+      - Project
   /projects/{project_id}/members/{user_id}:
     delete:
       consumes:
@@ -513,44 +580,6 @@ paths:
       security:
       - Login: []
       summary: Delete project member
-      tags:
-      - Project
-    post:
-      consumes:
-      - application/json
-      description: Add project member
-      parameters:
-      - description: Project id
-        in: path
-        name: project_id
-        required: true
-        type: string
-      - description: Project member
-        in: body
-        name: project_member
-        required: true
-        schema:
-          $ref: '#/definitions/model.Member'
-      produces:
-      - application/json
-      responses:
-        "204":
-          description: No Content
-        "404":
-          description: Project not found/User not found
-          schema:
-            $ref: '#/definitions/model.Message'
-        "422":
-          description: Incorrect id of project/Incorrect id of user
-          schema:
-            $ref: '#/definitions/model.Message'
-        "500":
-          description: Internal server error
-          schema:
-            $ref: '#/definitions/model.Message'
-      security:
-      - Login: []
-      summary: Add project member
       tags:
       - Project
   /projects/{project_id}/tasks:
@@ -808,6 +837,19 @@ paths:
       summary: Update task
       tags:
       - Task
+  /task/{id}/upload:
+    post:
+      description: Upload task
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Message'
+      security:
+      - Login: []
+      summary: Upload task
+      tags:
+      - Task
   /users:
     get:
       consumes:
@@ -856,6 +898,10 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/model.User'
+        "400":
+          description: Username already exists
+          schema:
+            $ref: '#/definitions/model.Message'
       security:
       - Login: []
       summary: Create user

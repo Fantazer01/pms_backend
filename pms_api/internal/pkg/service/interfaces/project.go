@@ -16,8 +16,9 @@ type ProjectService interface {
 	ArchiveProject(ctx context.Context, projectID string) error
 	UnarchiveProject(ctx context.Context, projectID string) error
 
-	GetProjectMembers(ctx context.Context, projectID string) ([]*model.UserShort, error)
-	AddProjectMember(ctx context.Context, projectID string, member *model.Member) error
+	GetProjectMembers(ctx context.Context, projectID string) ([]*model.Member, error)
+	AddProjectMember(ctx context.Context, projectID string, member *model.MemberInserted) error
+	UpdateProjectMember(ctx context.Context, projectID string, member *model.MemberInserted) error
 	DeleteProjectMember(ctx context.Context, projectID, userID string) error
 
 	GetProjectTasks(ctx context.Context, projectID string) ([]*model.Task, error)

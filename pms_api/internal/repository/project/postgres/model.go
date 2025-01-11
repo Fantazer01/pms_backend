@@ -38,16 +38,23 @@ func toProjectFromDb(projectFromDb project) *model.Project {
 	}
 }
 
-type user struct {
-	ID         string `db:"id"`
-	Username   string `db:"login"`
-	FirstName  string `db:"first_name"`
-	MiddleName string `db:"middle_name"`
-	LastName   string `db:"last_name"`
+type member struct {
+	ID             string `db:"id"`
+	Username       string `db:"login"`
+	FirstName      string `db:"first_name"`
+	MiddleName     string `db:"middle_name"`
+	LastName       string `db:"last_name"`
+	Role           string `db:"name_role"`
+	IsAdminProject bool   `db:"is_admin_project"`
 }
 
-func toUserShortsFromRepo(usersFromDb []user) []*model.UserShort {
-	users := make([]*model.UserShort, len(usersFromDb))
+type role struct {
+	ID   int    `db:"id"`
+	Name string `db:"name_role"`
+}
+
+func toMembersFromRepo(usersFromDb []member) []*model.Member {
+	users := make([]*model.Member, len(usersFromDb))
 	for i := range users {
 		fullNameSb := strings.Builder{}
 		fullNameSb.WriteString(usersFromDb[i].FirstName)
@@ -59,10 +66,12 @@ func toUserShortsFromRepo(usersFromDb []user) []*model.UserShort {
 			fullNameSb.WriteString(" ")
 			fullNameSb.WriteString(usersFromDb[i].LastName)
 		}
-		users[i] = &model.UserShort{
-			ID:       usersFromDb[i].ID,
-			Username: usersFromDb[i].Username,
-			FullName: fullNameSb.String(),
+		users[i] = &model.Member{
+			UserID:         usersFromDb[i].ID,
+			Username:       usersFromDb[i].Username,
+			FullName:       fullNameSb.String(),
+			Role:           usersFromDb[i].Role,
+			IsAdminProject: usersFromDb[i].IsAdminProject,
 		}
 	}
 	return users

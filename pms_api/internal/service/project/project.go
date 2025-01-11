@@ -129,7 +129,7 @@ func (s *projectService) UnarchiveProject(ctx context.Context, projectID string)
 	return nil
 }
 
-func (s *projectService) GetProjectMembers(ctx context.Context, projectID string) ([]*model.UserShort, error) {
+func (s *projectService) GetProjectMembers(ctx context.Context, projectID string) ([]*model.Member, error) {
 	projectFromDb, err := s.GetProjectByID(ctx, projectID)
 	if err != nil {
 		return nil, err
@@ -144,7 +144,7 @@ func (s *projectService) GetProjectMembers(ctx context.Context, projectID string
 	return members, nil
 }
 
-func (s *projectService) AddProjectMember(ctx context.Context, projectID string, member *model.Member) error {
+func (s *projectService) AddProjectMember(ctx context.Context, projectID string, member *model.MemberInserted) error {
 	projectFromDb, err := s.GetProjectByID(ctx, projectID)
 	if err != nil {
 		return err
@@ -155,6 +155,14 @@ func (s *projectService) AddProjectMember(ctx context.Context, projectID string,
 	err = s.projectRepository.AddProjectMember(ctx, projectID, member)
 	if err != nil {
 		return fmt.Errorf("adding member to project: %w", err)
+	}
+	return nil
+}
+
+func (s *projectService) UpdateProjectMember(ctx context.Context, projectID string, member *model.MemberInserted) error {
+	err := s.projectRepository.UpdateProjectMember(ctx, projectID, member)
+	if err != nil {
+		return fmt.Errorf("updating member to project: %w", err)
 	}
 	return nil
 }

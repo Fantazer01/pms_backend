@@ -323,19 +323,19 @@ func (h *handler) GetProjectMembers(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param project_id path string true "Project id"
-// @Param project_member body model.Member true "Project member"
+// @Param project_member body model.MemberInserted true "Project member"
 // @Success 204
 // @Failure 404 {object} model.Message "Project not found/User not found"
 // @Failure 422 {object} model.Message "Incorrect id of project/Incorrect id of user"
 // @Failure 500 {object} model.Message "Internal server error"
 // @Security Login
-// @Router /projects/{project_id}/members/{user_id} [post]
+// @Router /projects/{project_id}/members [post]
 func (h *handler) AddProjectMember(c echo.Context) error {
 	projectID := c.Param("project_id")
 	if err := uuid.Validate(projectID); err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectProjectID})
 	}
-	projectMember := &model.Member{}
+	projectMember := &model.MemberInserted{}
 	err := c.Bind(projectMember)
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: bindError})
@@ -344,6 +344,39 @@ func (h *handler) AddProjectMember(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectUserID})
 	}
 	err = h.projectService.AddProjectMember(c.Request().Context(), projectID, projectMember)
+	if err != nil {
+		slog.Error(err.Error())
+		if errors.Is(err, apperror.NotFound) {
+			return c.JSON(http.StatusNotFound, model.Message{Message: projectNotFound})
+		}
+		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalServerError})
+	}
+	return c.NoContent(http.StatusNoContent)
+}
+
+// UpdateProjectMember
+// @Tags Project
+// @Summary Update role and project admin right
+// @Description Update role and project admin right
+// @Accept json
+// @Produce json
+// @Param project_member body model.MemberInserted true "Project member"
+// @Success 204
+// @Failure 404 {object} model.Message "Project not found/User not found"
+// @Failure 500 {object} model.Message "Internal server error"
+// @Security Login
+// @Router /projects/{project_id}/members [put]
+func (h *handler) UpdateProjectMember(c echo.Context) error {
+	projectID := c.Param("project_id")
+	if err := uuid.Validate(projectID); err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: incorrectProjectID})
+	}
+	projectMember := &model.MemberInserted{}
+	err := c.Bind(projectMember)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, model.Message{Message: bindError})
+	}
+	err = h.projectService.UpdateProjectMember(c.Request().Context(), projectID, projectMember)
 	if err != nil {
 		slog.Error(err.Error())
 		if errors.Is(err, apperror.NotFound) {

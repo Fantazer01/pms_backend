@@ -55,14 +55,29 @@ const (
 		WHERE id = @id
 	`
 	getProjectMembers = `
-		SELECT u.id, u.login, u.first_name, u.middle_name, u.last_name
+		SELECT u.id, u.login, u.first_name, u.middle_name, u.last_name, r.name_role, pp.is_admin_project
 		FROM users u
 		JOIN participants_project pp on pp.user_id = u.id
+		JOIN role r on r.id = pp.role_id
 		WHERE pp.project_id = @project_id
 	`
-	insertUserToProject = `
+	getProjectMemberByID = `
+		SELECT u.id, u.login, u.first_name, u.middle_name, u.last_name, r.name_role, pp.is_admin_project
+		FROM participants_project pp
+		JOIN users u on u.id = pp.user_id
+		JOIN role r on r.id = pp.role_id
+		WHERE pp.project_id = @project_id AND pp.user_id = @user_id
+	`
+	insertMemberToProject = `
 		INSERT INTO participants_project(user_id, project_id, role_id, is_admin_project)
 		VALUES (@user_id, @project_id, @role_id, @is_admin_project)
+	`
+	updateMemberToProject = `
+		UPDATE participants_project
+		SET 
+		role_id = @role_id
+		is_admin_project = @is_admin_project
+		WHERE project_id = @project_id AND user_id = @user_id
 	`
 	deleteUserFromProject = `
 		DELETE FROM participants_project

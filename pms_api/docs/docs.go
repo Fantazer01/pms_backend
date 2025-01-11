@@ -510,9 +510,53 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/projects/{project_id}/members/{user_id}": {
+            },
+            "put": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
+                "description": "Update role and project admin right",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Update role and project admin right",
+                "parameters": [
+                    {
+                        "description": "Project member",
+                        "name": "project_member",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.MemberInserted"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "404": {
+                        "description": "Project not found/User not found",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -544,7 +588,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.Member"
+                            "$ref": "#/definitions/model.MemberInserted"
                         }
                     }
                 ],
@@ -571,7 +615,9 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/projects/{project_id}/members/{user_id}": {
             "delete": {
                 "security": [
                     {
@@ -986,6 +1032,28 @@ const docTemplate = `{
                 }
             }
         },
+        "/task/{id}/upload": {
+            "post": {
+                "security": [
+                    {
+                        "Login": []
+                    }
+                ],
+                "description": "Upload task",
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Upload task",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "security": [
@@ -1066,6 +1134,12 @@ const docTemplate = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/model.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Username already exists",
+                        "schema": {
+                            "$ref": "#/definitions/model.Message"
                         }
                     }
                 }
@@ -1266,7 +1340,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Member": {
+        "model.MemberInserted": {
             "type": "object",
             "properties": {
                 "is_admin_project": {
