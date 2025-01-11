@@ -32,7 +32,7 @@ func (s *taskService) GetTaskByID(ctx context.Context, taskID string) (*model.Ta
 
 func (s *taskService) CreateTask(ctx context.Context, t *model.TaskInserted) (*model.Task, error) {
 	if time.Since(t.Deadline) > 0 {
-		return nil, errors.New("пытаются установить прошедшее время дедлайна")
+		return nil, errors.New("trying to establish the deadline's elapsed time")
 	}
 	task := &model.Task{
 		ID:          uuid.NewString(),
@@ -61,8 +61,8 @@ func (s *taskService) UpdateTask(ctx context.Context, taskID string, t *model.Ta
 	if taskFromDb == nil {
 		return nil, apperror.NotFound
 	}
-	if time.Since(t.Deadline) < 0 {
-		return nil, errors.New("пытаются установить прошедшее время дедлайна")
+	if time.Since(t.Deadline) > 0 {
+		return nil, errors.New("trying to establish the deadline's elapsed time")
 	}
 	task := &model.Task{
 		ID:          taskID,
