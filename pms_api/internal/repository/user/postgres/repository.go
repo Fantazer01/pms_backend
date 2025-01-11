@@ -117,12 +117,12 @@ func (r *userRepository) DeleteUser(ctx context.Context, userID string) error {
 	return err
 }
 
-func (r *userRepository) GetUserProjects(ctx context.Context, userID string) ([]*model.ProjectShort, error) {
+func (r *userRepository) GetUserProjects(ctx context.Context, userID string) ([]*model.Project, error) {
 	rows, err := r.pool.Query(ctx, getProjectsOfUserQuery, pgx.NamedArgs{"user_id": userID})
 	if err != nil {
 		return nil, err
 	}
-	items, err := pgx.CollectRows(rows, pgx.RowToStructByName[projectShort])
+	items, err := pgx.CollectRows(rows, pgx.RowToStructByName[project])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, nil

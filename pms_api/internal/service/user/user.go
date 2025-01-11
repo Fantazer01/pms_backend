@@ -120,7 +120,7 @@ func (s *userService) DeleteUser(ctx context.Context, userID string) error {
 	return nil
 }
 
-func (s *userService) GetUserProjects(ctx context.Context, userID string) ([]*model.ProjectShort, error) {
+func (s *userService) GetUserProjects(ctx context.Context, userID string) ([]*model.Project, error) {
 	projects, err := s.userRepository.GetUserProjects(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("getting projects of the user: %w", err)

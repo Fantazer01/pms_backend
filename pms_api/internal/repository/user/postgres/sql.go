@@ -43,7 +43,7 @@ const (
 		WHERE id = @id
 	`
 	getProjectsOfUserQuery = `
-		SELECT p.id, p.name, p.is_active
+		SELECT p.id, p.name, p.is_active, p.description, p.created_at, p.updated_at
 		FROM project p
 		JOIN participants_project pp on pp.project_id = p.id
 		WHERE pp.user_id = @user_id
