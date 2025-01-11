@@ -6,7 +6,7 @@ CREATE SEQUENCE IF NOT EXISTS public.log_changes__log_id_seq
     CACHE 1;
 
 ALTER SEQUENCE public.log_changes__log_id_seq
-    OWNER TO postgres;
+    OWNER TO admin;
 	
 CREATE TABLE IF NOT EXISTS public.log_changes
 (
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS public.log_changes
 )
 TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.log_changes
-    OWNER to postgres;
+    OWNER to admin;
 CREATE OR REPLACE FUNCTION public.before_operation_function()
 RETURNS TRIGGER
 AS $$

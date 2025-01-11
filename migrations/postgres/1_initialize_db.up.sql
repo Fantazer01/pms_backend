@@ -1,5 +1,3 @@
-CREATE ROLE admin WITH LOGIN SUPERUSER PASSWORD 'strongPass123';
-
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- SEQUENCE: public.role__role_id_seq

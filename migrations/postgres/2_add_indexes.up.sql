@@ -1,5 +1,5 @@
 CREATE INDEX IF NOT EXISTS role_name_idx ON role(name_role);
-CREATE INDEX IF NOT EXISTS  users_idx ON users(last_name,first_name);
+CREATE INDEX IF NOT EXISTS users_idx ON users(last_name,first_name);
 CREATE INDEX IF NOT EXISTS project_name_idx ON project(name);
 CREATE INDEX IF NOT EXISTS created_at_idx ON project(created_at);
 CREATE INDEX IF NOT EXISTS updated_at_idx ON project(updated_at);
