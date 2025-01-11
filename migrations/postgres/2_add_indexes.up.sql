@@ -1,0 +1,12 @@
+CREATE INDEX IF NOT EXISTS role_name_idx ON role(name_role);
+CREATE INDEX IF NOT EXISTS users_idx ON users(last_name,first_name);
+CREATE INDEX IF NOT EXISTS project_name_idx ON project(name);
+CREATE INDEX IF NOT EXISTS created_at_idx ON project(created_at);
+CREATE INDEX IF NOT EXISTS updated_at_idx ON project(updated_at);
+CREATE INDEX IF NOT EXISTS participant_project_user_id_idx ON participants_project(user_id);
+CREATE INDEX IF NOT EXISTS task_name_idx ON task(name);
+CREATE INDEX IF NOT EXISTS task_status_idx ON task(status);
+CREATE INDEX IF NOT EXISTS task_created_at ON task(created_at);
+CREATE INDEX IF NOT EXISTS task_deadline_idx ON task(deadline);
+CREATE INDEX IF NOT EXISTS task_executor_author_idx ON task(executor_id,author_id);
+CREATE INDEX IF NOT EXISTS task_executor_tester_idx ON task(executor_id,tester_id);
