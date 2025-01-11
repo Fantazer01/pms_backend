@@ -25,6 +25,7 @@ func (r *repository) GetUserByUsername(ctx context.Context, username string) (*m
 		ID:         u.ID,
 		Username:   u.Username,
 		Password:   u.Password,
+		IsAdmin:    u.IsAdmin,
 		FirstName:  u.FirstName,
 		MiddleName: u.MiddleName,
 		LastName:   u.LastName,
