@@ -530,6 +530,13 @@ const docTemplate = `{
                 "summary": "Update role and project admin right",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "Project id",
+                        "name": "project_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Project member",
                         "name": "project_member",
                         "in": "body",

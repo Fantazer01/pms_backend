@@ -18,7 +18,8 @@ func (h *handler) RegisterRoutes(router *echo.Group) {
 		projects.PUT("/:project_id/unarchive", h.UnarchiveProject)
 
 		projects.GET("/:project_id/members", h.GetProjectMembers)
-		projects.POST("/:project_id/members/:user_id", h.AddProjectMember)
+		projects.POST("/:project_id/members", h.AddProjectMember)
+		projects.PUT("/:project_id/members", h.UpdateProjectMember)
 		projects.DELETE("/:project_id/members/:user_id", h.DeleteProjectMember)
 
 		projects.GET("/:project_id/tasks", h.GetProjectTasks)

@@ -360,6 +360,7 @@ func (h *handler) AddProjectMember(c echo.Context) error {
 // @Description Update role and project admin right
 // @Accept json
 // @Produce json
+// @Param project_id path string true "Project id"
 // @Param project_member body model.MemberInserted true "Project member"
 // @Success 204
 // @Failure 404 {object} model.Message "Project not found/User not found"

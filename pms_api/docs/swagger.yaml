@@ -533,6 +533,11 @@ paths:
       - application/json
       description: Update role and project admin right
       parameters:
+      - description: Project id
+        in: path
+        name: project_id
+        required: true
+        type: string
       - description: Project member
         in: body
         name: project_member
