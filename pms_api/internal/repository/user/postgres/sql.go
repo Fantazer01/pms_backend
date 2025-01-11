@@ -30,6 +30,7 @@ const (
 		UPDATE users
 		SET
 		login = @login,
+		password = @password,
 		first_name = @first_name,
 		middle_name = @middle_name,
 		last_name = @last_name,

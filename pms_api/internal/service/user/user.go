@@ -81,9 +81,16 @@ func (s *userService) UpdateUser(ctx context.Context, userID string, u *model.Us
 	if userFromDB == nil {
 		return nil, apperror.NotFound
 	}
+	hash := sha256.New()
+	_, err = hash.Write([]byte(u.Password))
+	if err != nil {
+		return nil, fmt.Errorf("creating user: %w", err)
+	}
+	pas := hash.Sum(nil)
 	user := &model.User{
 		ID:         userID,
 		Username:   u.Username,
+		Password:   pas,
 		IsAdmin:    userFromDB.IsAdmin,
 		FirstName:  u.FirstName,
 		MiddleName: u.MiddleName,

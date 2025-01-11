@@ -102,6 +102,7 @@ func (r *userRepository) UpdateUser(ctx context.Context, user *model.User) error
 	_, err := r.pool.Exec(ctx, updateUser, pgx.NamedArgs{
 		"id":          user.ID,
 		"login":       user.Username,
+		"password":    user.Password,
 		"first_name":  user.FirstName,
 		"middle_name": user.MiddleName,
 		"last_name":   user.LastName,
