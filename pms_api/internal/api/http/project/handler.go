@@ -294,7 +294,7 @@ func (h *handler) UnarchiveProject(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param project_id path string true "Project id"
-// @Success 200 {object} []model.UserShort
+// @Success 200 {object} []model.Member
 // @Failure 404 {object} model.Message "Project not found"
 // @Failure 422 {object} model.Message "Incorrect id of project"
 // @Failure 500 {object} model.Message "Internal server error"

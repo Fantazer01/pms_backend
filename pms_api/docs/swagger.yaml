@@ -14,6 +14,19 @@ definitions:
       name:
         type: string
     type: object
+  model.Member:
+    properties:
+      full_name:
+        type: string
+      is_admin_project:
+        type: boolean
+      role:
+        type: string
+      user_id:
+        type: string
+      username:
+        type: string
+    type: object
   model.MemberInserted:
     properties:
       is_admin_project:
@@ -458,7 +471,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.UserShort'
+              $ref: '#/definitions/model.Member'
             type: array
         "404":
           description: Project not found

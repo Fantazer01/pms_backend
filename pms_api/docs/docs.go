@@ -487,7 +487,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.UserShort"
+                                "$ref": "#/definitions/model.Member"
                             }
                         }
                     },
@@ -1336,6 +1336,26 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Member": {
+            "type": "object",
+            "properties": {
+                "full_name": {
+                    "type": "string"
+                },
+                "is_admin_project": {
+                    "type": "boolean"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                },
+                "username": {
                     "type": "string"
                 }
             }
