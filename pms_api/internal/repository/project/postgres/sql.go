@@ -75,7 +75,7 @@ const (
 	updateMemberToProject = `
 		UPDATE participants_project
 		SET 
-		role_id = @role_id
+		role_id = @role_id,
 		is_admin_project = @is_admin_project
 		WHERE project_id = @project_id AND user_id = @user_id
 	`
