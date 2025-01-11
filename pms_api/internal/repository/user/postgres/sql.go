@@ -17,6 +17,11 @@ const (
 		FROM users
 		WHERE id = @id
 	`
+	getUserByUsername = `
+		SELECT id, login, first_name, middle_name, last_name, position, created_at, updated_at
+		FROM users
+		WHERE login = @username
+	`
 	createUser = `
 		INSERT INTO users(id, login, password, is_admin, first_name, middle_name, last_name, position, created_at, updated_at)
 		VALUES (@id, @login, @password, @is_admin, @first_name, @middle_name, @last_name, @position, @created_at, @updated_at)

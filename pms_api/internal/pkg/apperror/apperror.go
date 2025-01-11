@@ -14,4 +14,6 @@ var (
 	NotFound = &internalError{err: errors.New("not found")}
 
 	Unauthorized = &internalError{err: errors.New("unauthorized")}
+
+	InvalidValue = &internalError{err: errors.New("invalid value")}
 )

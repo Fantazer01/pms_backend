@@ -39,8 +39,16 @@ func (s *userService) GetUserByID(ctx context.Context, userID string) (*model.Us
 }
 
 func (s *userService) CreateUser(ctx context.Context, u *model.UserInserted) (*model.User, error) {
+	userFromDb, err := s.userRepository.GetUserByUsername(ctx, u.Username)
+	if err != nil {
+		return nil, fmt.Errorf("getting user by username: %w", err)
+	}
+	if userFromDb != nil {
+		return nil, apperror.InvalidValue
+	}
+
 	hash := sha256.New()
-	_, err := hash.Write([]byte(u.Password))
+	_, err = hash.Write([]byte(u.Password))
 	if err != nil {
 		return nil, fmt.Errorf("creating user: %w", err)
 	}

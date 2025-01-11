@@ -66,6 +66,22 @@ func (r *userRepository) GetUserByID(ctx context.Context, userID string) (*model
 	return toUserFromRepo(item), nil
 }
 
+func (r *userRepository) GetUserByUsername(ctx context.Context, username string) (*model.User, error) {
+	rows, err := r.pool.Query(ctx, getUserByUsername, pgx.NamedArgs{"username": username})
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	item, err := pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[user])
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return toUserFromRepo(item), nil
+}
+
 func (r *userRepository) CreateUser(ctx context.Context, user *model.User) error {
 	_, err := r.pool.Exec(ctx, createUser, pgx.NamedArgs{
 		"id":          user.ID,

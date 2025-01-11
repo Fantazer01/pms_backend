@@ -112,6 +112,7 @@ func (h *handler) GetUserByID(c echo.Context) error {
 // @Produce json
 // @Param user body model.UserInserted true "User"
 // @Success 201 {object} model.User
+// @Failure 400 {object} model.Message "Username already exists"
 // @Security Login
 // @Router /users [post]
 func (h *handler) CreateUser(c echo.Context) error {
@@ -123,6 +124,9 @@ func (h *handler) CreateUser(c echo.Context) error {
 	user, err := h.userService.CreateUser(c.Request().Context(), userInserted)
 	if err != nil {
 		slog.Error(err.Error())
+		if errors.Is(err, apperror.InvalidValue) {
+			c.JSON(http.StatusBadRequest, model.Message{Message: "Username already exists"})
+		}
 		return c.JSON(http.StatusInternalServerError, model.Message{Message: internalError})
 	}
 	return c.JSON(http.StatusCreated, user)
