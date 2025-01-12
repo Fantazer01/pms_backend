@@ -25,33 +25,33 @@ AS $$
 BEGIN
 	IF TG_TABLE_NAME = 'participants_project' THEN
 		IF TG_OP = 'DELETE' THEN
-			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,uuid_generate_v5(uuid_nil(), OLD.participants_project_id::text),false);
+			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,OLD.project_id,false);
 		ELSE
-			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,uuid_generate_v5(uuid_nil(), NEW.participants_project_id::text),false);
+			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,NEW.project_id,false);
 		END IF;
 	ELSIF TG_TABLE_NAME = 'role' THEN
 		IF TG_OP = 'DELETE' THEN
-			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,uuid_generate_v5(uuid_nil(), OLD.role_id::text),false);
+			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,OLD.id,false);
 		ELSE
-			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,uuid_generate_v5(uuid_nil(), NEW.role_id::text),false);
+			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,NEW.id,false);
 		END IF;
 	ELSIF TG_TABLE_NAME = 'users' THEN
 		IF TG_OP = 'DELETE' THEN
-			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,uuid_generate_v5(uuid_nil(), OLD.user_id::text),false);
+			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,OLD.id,false);
 		ELSE
-			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,uuid_generate_v5(uuid_nil(), NEW.user_id::text),false);
+			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,NEW.id,false);
 		END IF;
 	ELSIF TG_TABLE_NAME = 'project' THEN
 		IF TG_OP = 'DELETE' THEN
-			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,uuid_generate_v5(uuid_nil(), OLD.project_id::text),false);
+			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,OLD.id,false);
 		ELSE
-			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,uuid_generate_v5(uuid_nil(), NEW.project_id::text),false);
+			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,NEW.id,false);
 		END IF;
 	ELSIF TG_TABLE_NAME = 'task' THEN
 		IF TG_OP = 'DELETE' THEN
-			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,uuid_generate_v5(uuid_nil(), OLD.task_id::text),false);
+			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP, OLD.task_id,false);
 		ELSE
-			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,uuid_generate_v5(uuid_nil(), NEW.task_id::text),false);
+			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,NEW.task_id,false);
 		END IF;
 	END IF;
 	IF TG_OP = 'DELETE' THEN

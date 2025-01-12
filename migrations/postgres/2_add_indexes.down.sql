@@ -1,8 +1,8 @@
 DROP INDEX IF EXISTS role_name_idx;
 DROP INDEX IF EXISTS users_idx;
 DROP INDEX IF EXISTS project_name_idx;
-DROP INDEX IF EXISTS created_at_idx;
-DROP INDEX IF EXISTS updated_at_idx;
+DROP INDEX IF EXISTS project_created_at_idx;
+DROP INDEX IF EXISTS project_updated_at_idx;
 DROP INDEX IF EXISTS participant_project_user_id_idx;
 DROP INDEX IF EXISTS task_name_idx;
 DROP INDEX IF EXISTS task_status_idx;
