@@ -49,9 +49,9 @@ BEGIN
 		END IF;
 	ELSIF TG_TABLE_NAME = 'task' THEN
 		IF TG_OP = 'DELETE' THEN
-			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP, OLD.id,false);
+			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP, OLD.task_id,false);
 		ELSE
-			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,NEW.id,false);
+			INSERT INTO log_changes (tablename,operation,id_information,status) VALUES (TG_TABLE_NAME,TG_OP,NEW.task_id,false);
 		END IF;
 	END IF;
 	IF TG_OP = 'DELETE' THEN
